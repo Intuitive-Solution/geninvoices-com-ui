@@ -20,8 +20,6 @@ import {
   Repeat,
   CreditCard,
   File,
-  Briefcase,
-  Clock,
   PieChart,
   Info,
 } from 'react-feather';
