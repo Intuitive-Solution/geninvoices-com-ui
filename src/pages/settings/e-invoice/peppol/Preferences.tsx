@@ -24,8 +24,6 @@ import { Modal } from '$app/components/Modal';
 import { useEffect, useState } from 'react';
 import { useAccentColor } from '$app/common/hooks/useAccentColor';
 import { useStaticsQuery } from '$app/common/queries/statics';
-import { useQuery } from 'react-query';
-import { AxiosError, AxiosResponse } from 'axios';
 import { ValidationBag } from '$app/common/interfaces/validation-bag';
 import { get } from 'lodash';
 
