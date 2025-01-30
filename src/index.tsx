@@ -90,7 +90,6 @@ loader.init().then(/* ... */);
 const container = document.getElementById('root') as HTMLElement;
 
 createRoot(container).render(
-  <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <GoogleOAuth>
@@ -102,7 +101,6 @@ createRoot(container).render(
         </GoogleOAuth>
       </Provider>
     </QueryClientProvider>
-  </React.StrictMode>
 );
 
 export const emitter = mitt<Events>();
