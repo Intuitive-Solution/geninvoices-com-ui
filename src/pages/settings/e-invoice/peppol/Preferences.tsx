@@ -183,39 +183,7 @@ export function Preferences() {
 }
 
 export function useQuota() {
-  const account = useCurrentAccount();
-
-  const quota = useQuery({
-    queryKey: ['/api/v1/einvoice/quota'],
-    queryFn: () =>
-      request('GET', endpoint('/api/v1/einvoice/quota'))
-        .then((response: AxiosResponse<{ quota: string }>) => response.data)
-        .catch((error: AxiosError<{ message: string }>) => {
-          if (error.response?.status === 422) {
-            toast.error(error.response.data.message);
-          }
-        }),
-    enabled:
-      isSelfHosted() && import.meta.env.VITE_ENABLE_PEPPOL_STANDARD === 'true',
-    retry: () => false,
-    staleTime: Infinity,
-  });
-
-  const count = () => {
-    if (isHosted()) {
-      return parseInt(account?.e_invoice_quota);
-    }
-
-    if (quota) {
-      return typeof quota.data?.quota === 'number'
-        ? parseInt(quota.data.quota)
-        : null;
-    }
-
-    return null;
-  };
-
-  return count();
+  return 10;
 }
 
 function Quota() {
