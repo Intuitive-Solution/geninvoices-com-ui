@@ -147,7 +147,7 @@ export function useDataTablePreferences(params: Params) {
         setCustomFilter([]);
       }
       !withoutStoringPerPage &&
-        setPerPage((getPreference('perPage') as PerPage) || '10');
+        setPerPage('50');
       setCurrentPage((getPreference('currentPage') as number) || 1);
       setSort((getPreference('sort') as string) || 'id|asc');
       setSortedBy((getPreference('sortedBy') as string) || undefined);
