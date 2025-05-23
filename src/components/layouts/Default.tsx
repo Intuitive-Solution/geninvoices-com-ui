@@ -227,40 +227,19 @@ export function Default(props: Props) {
         visible: hasPermission('create_credit'),
       },
     },
-    // {
-    //   name: t('projects'),
-    //   href: '/projects',
-    //   icon: Briefcase,
-    //   current: location.pathname.startsWith('/projects'),
-    //   visible:
-    //     enabled(ModuleBitmask.Projects) &&
-    //     (hasPermission('view_project') ||
-    //       hasPermission('create_project') ||
-    //       hasPermission('edit_project')),
-    //   rightButton: {
-    //     icon: PlusCircle,
-    //     to: '/projects/create',
-    //     label: t('new_project'),
-    //     visible: hasPermission('create_project'),
-    //   },
-    // },
-    // {
-    //   name: t('tasks'),
-    //   href: '/tasks',
-    //   icon: Clock,
-    //   current: location.pathname.startsWith('/tasks'),
-    //   visible:
-    //     enabled(ModuleBitmask.Tasks) &&
-    //     (hasPermission('view_task') ||
-    //       hasPermission('edit_task') ||
-    //       hasPermission('create_task')),
-    //   rightButton: {
-    //     icon: PlusCircle,
-    //     to: '/tasks/create',
-    //     label: t('new_task'),
-    //     visible: hasPermission('create_task'),
-    //   },
-    // },
+    {
+      name: t('resources'),
+      href: '/resources',
+      icon: Box,
+      current: location.pathname.startsWith('/resources'),
+      visible: true,
+      rightButton: {
+        icon: PlusCircle,
+        to: '/resources/create',
+        label: t('new_resource'),
+        visible: true,
+      },
+    },
     {
       name: t('vendors'),
       href: '/vendors',
