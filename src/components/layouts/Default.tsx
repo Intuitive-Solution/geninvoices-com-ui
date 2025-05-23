@@ -22,6 +22,7 @@ import {
   File,
   PieChart,
   Info,
+  User,
 } from 'react-feather';
 import CommonProps from '../../common/interfaces/common-props.interface';
 import { useTranslation } from 'react-i18next';
@@ -230,7 +231,7 @@ export function Default(props: Props) {
     {
       name: t('resources'),
       href: '/resources',
-      icon: Box,
+      icon: User,
       current: location.pathname.startsWith('/resources'),
       visible: true,
       rightButton: {
