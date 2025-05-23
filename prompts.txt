@@ -3,5 +3,6 @@ On the front end add a resources link on left menu
 
 add a list screen similar to vendors list screen 
 
+In the resource index page show only Name Description Rate  state , actions
 
-add a list screen similar to vendors list screen 
+Create Detail page for Resources Where you can enter values for Name Description , rate , and status 
