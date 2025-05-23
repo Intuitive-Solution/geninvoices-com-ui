@@ -17,7 +17,6 @@ import {
   useActions,
   useAllResourceColumns,
   useResourceColumns,
-  useResourceFilters,
 } from '../common/hooks';
 import { DataTableColumnsPicker } from '$app/components/DataTableColumnsPicker';
 import { permission } from '$app/common/guards/guards/permission';
@@ -34,8 +33,6 @@ export default function Resources() {
   const columns = useResourceColumns();
 
   const actions = useActions();
-
-  const filters = useResourceFilters();
 
   const resourceColumns = useAllResourceColumns();
 

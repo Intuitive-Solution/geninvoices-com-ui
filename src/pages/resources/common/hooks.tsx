@@ -8,10 +8,9 @@
  * @license https://www.elastic.co/licensing/elastic-license
  */
 
-import { date, getEntityState } from '$app/common/helpers';
+import { getEntityState } from '$app/common/helpers';
 import { route } from '$app/common/helpers/route';
 import { useFormatMoney } from '$app/common/hooks/money/useFormatMoney';
-import { useCurrentCompanyDateFormats } from '$app/common/hooks/useCurrentCompanyDateFormats';
 import { Resource } from '$app/common/interfaces/resource';
 import { ValidationBag } from '$app/common/interfaces/validation-bag';
 import { DropdownElement } from '$app/components/dropdown/DropdownElement';
@@ -29,15 +28,12 @@ import {
 } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { resourceAtom } from './atoms';
-import { useEntityCustomFields } from '$app/common/hooks/useEntityCustomFields';
 import { useSetAtom } from 'jotai';
 import { useBulk } from '$app/common/queries/resources';
 import { Divider } from '$app/components/cards/Divider';
 import { EntityState } from '$app/common/enums/entity-state';
 import { useHasPermission } from '$app/common/hooks/permissions/useHasPermission';
 import { DynamicLink } from '$app/components/DynamicLink';
-import { useFormatCustomFieldValue } from '$app/common/hooks/useFormatCustomFieldValue';
-import { useFormatNumber } from '$app/common/hooks/useFormatNumber';
 
 export function useActions() {
   const [t] = useTranslation();
@@ -113,11 +109,6 @@ export const defaultColumns: string[] = [
 ];
 
 export function useAllResourceColumns() {
-  const [firstCustom, secondCustom, thirdCustom, fourthCustom] =
-    useEntityCustomFields({
-      entity: 'expense',
-    });
-
   const resourceColumns = [
     'name',
     'description',
@@ -131,22 +122,11 @@ export function useAllResourceColumns() {
 
 export function useResourceColumns() {
   const { t } = useTranslation();
-  const { dateFormat } = useCurrentCompanyDateFormats();
 
-  const formatNumber = useFormatNumber();
-  const hasPermission = useHasPermission();
-
-  const navigate = useNavigate();
   const formatMoney = useFormatMoney();
-  const formatCustomFieldValue = useFormatCustomFieldValue();
 
   const resourceColumns = useAllResourceColumns();
   type ResourceColumns = (typeof resourceColumns)[number];
-
-  const [firstCustom, secondCustom, thirdCustom, fourthCustom] =
-    useEntityCustomFields({
-      entity: 'expense',
-    });
 
   const columns: DataTableColumnsExtended<Resource, ResourceColumns> = [
     {
@@ -189,6 +169,7 @@ export function useResourceColumns() {
       format: (value, resource) => <EntityStatus entity={resource} />,
     },
   ];
+
   return columns;
 }
 
