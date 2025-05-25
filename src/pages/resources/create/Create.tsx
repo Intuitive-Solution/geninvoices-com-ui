@@ -25,6 +25,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { resourceAtom } from '../common/atoms';
 import { useHandleChange } from '../common/hooks';
 import { useAtom } from 'jotai';
+import { $refetch } from '$app/common/hooks/useRefetch';
 
 export default function Create() {
   const { documentTitle } = useTitle('new_resource');
@@ -86,6 +87,8 @@ export default function Create() {
               id: response.data.data.id,
             })
           );
+
+          $refetch(['resources']);
         })
         .catch((error: AxiosError<ValidationBag>) => {
           console.log('Validation error:', error.response?.data);

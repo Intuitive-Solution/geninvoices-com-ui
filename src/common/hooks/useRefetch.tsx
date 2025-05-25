@@ -190,6 +190,10 @@ export const keys = {
       '/api/v1/documents',
     ],
   },
+  resources: {
+    path: '/api/v1/resources',
+    dependencies: [],
+  },
   bank_integrations: {
     path: '/api/v1/bank_integrations',
     dependencies: ['/api/v1/bank_transactions'],

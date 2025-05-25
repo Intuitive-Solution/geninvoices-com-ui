@@ -16,6 +16,7 @@ import { route } from '$app/common/helpers/route';
 import { Resource } from '$app/common/interfaces/resource';
 import { GenericSingleResourceResponse } from '$app/common/interfaces/generic-api-response';
 import { AxiosError } from 'axios';
+import { $refetch } from '$app/common/hooks/useRefetch';
 
 export function useResourceQuery(params: { id: string | undefined }) {
   return useQuery<Resource>(
@@ -25,7 +26,11 @@ export function useResourceQuery(params: { id: string | undefined }) {
         (response: GenericSingleResourceResponse<Resource>) =>
           response.data.data
       ),
-    { staleTime: Infinity }
+    { 
+      staleTime: Infinity,
+      enabled: !!params.id,
+      refetchOnMount: 'always'
+    }
   );
 }
 
@@ -43,20 +48,28 @@ export function useResourcesQuery(params: { perPage?: number } = {}) {
   );
 }
 
+const successMessages = {
+  bulk_update: 'updated_records',
+};
+
 export function useBulk() {
   const queryClient = useQueryClient();
 
-  return (id: string[], action: 'archive' | 'restore' | 'delete') => {
+  return (ids: string[], action: 'archive' | 'restore' | 'delete') => {
     toast.processing();
 
-    request('POST', endpoint('/api/v1/resources/bulk'), {
+    return request('POST', endpoint('/api/v1/resources/bulk'), {
       action,
-      ids: id,
+      ids,
     })
       .then(() => {
-        toast.success(`${action}d_resource`);
+        const message =
+          successMessages[action as keyof typeof successMessages] ||
+          `${action}d_resource`;
 
-        queryClient.invalidateQueries('/api/v1/resources');
+        toast.success(message);
+
+        $refetch(['resources']);
       })
       .catch((error: AxiosError) => {
         console.error(error);
