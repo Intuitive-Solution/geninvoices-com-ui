@@ -67,7 +67,7 @@ export default function Edit() {
           />
         </Element>
 
-        <Element leftSide={t('rate')} required>
+        <Element leftSide={t('rate') + ' ($) ' + t('per_month')} required>
           <InputField
             type="number"
             value={resource?.rate || 0}
