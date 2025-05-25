@@ -11,7 +11,7 @@
 import { endpoint } from '$app/common/helpers';
 import { request } from '$app/common/helpers/request';
 import { toast } from '$app/common/helpers/toast/toast';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import { route } from '$app/common/helpers/route';
 import { Resource } from '$app/common/interfaces/resource';
 import { GenericSingleResourceResponse } from '$app/common/interfaces/generic-api-response';
@@ -53,8 +53,6 @@ const successMessages = {
 };
 
 export function useBulk() {
-  const queryClient = useQueryClient();
-
   return (ids: string[], action: 'archive' | 'restore' | 'delete') => {
     toast.processing();
 
