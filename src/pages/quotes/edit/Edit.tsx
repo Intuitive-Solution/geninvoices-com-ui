@@ -24,9 +24,10 @@ import { useQuoteUtilities } from '../common/hooks';
 import { Card } from '$app/components/cards';
 import { QuoteStatus as QuoteStatusBadge } from '../common/components/QuoteStatus';
 import { TabGroup } from '$app/components/TabGroup';
-import { useTaskColumns } from '$app/pages/invoices/common/hooks/useTaskColumns';
+
 import { useColorScheme } from '$app/common/colors';
 import { QuoteContext } from '../create/Create';
+import { defaultColumns as resourceDefaultColumns } from '$app/pages/resources/common/hooks';
 
 export default function Edit() {
   const [t] = useTranslation();
@@ -48,7 +49,7 @@ export default function Edit() {
   } = context;
 
   const colors = useColorScheme();
-  const taskColumns = useTaskColumns();
+  const resourceColumns = resourceDefaultColumns;
   const productColumns = useProductColumns();
 
   const {
@@ -95,8 +96,8 @@ export default function Edit() {
 
         <div className="col-span-12">
           <TabGroup
-            tabs={[t('products'), t('tasks')]}
-            defaultTabIndex={searchParams.get('table') === 'tasks' ? 1 : 0}
+            tabs={[t('products'), t('resources')]}
+            defaultTabIndex={searchParams.get('table') === 'resources' ? 1 : 0}
           >
             <div>
               {quote && client ? (
@@ -124,18 +125,18 @@ export default function Edit() {
             <div>
               {quote && client ? (
                 <ProductsTable
-                  type="task"
+                  type="resource"
                   resource={quote}
                   items={quote.line_items.filter(
-                    (item) => item.type_id === InvoiceItemType.Task
+                    (item) => item.type_id === InvoiceItemType.Resource
                   )}
-                  columns={taskColumns}
+                  columns={resourceColumns}
                   relationType="client_id"
                   onLineItemChange={handleLineItemChange}
                   onSort={(lineItems) => handleChange('line_items', lineItems)}
                   onLineItemPropertyChange={handleLineItemPropertyChange}
                   onCreateItemClick={() =>
-                    handleCreateLineItem(InvoiceItemType.Task)
+                    handleCreateLineItem(InvoiceItemType.Resource)
                   }
                   onDeleteRowClick={handleDeleteLineItem}
                 />

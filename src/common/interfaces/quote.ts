@@ -57,7 +57,7 @@ export interface Quote {
   custom_value2: string;
   custom_value3: string;
   custom_value4: string;
-  has_tasks: boolean;
+  has_resources: boolean;
   has_expenses: boolean;
   custom_surcharge1: number;
   custom_surcharge2: number;

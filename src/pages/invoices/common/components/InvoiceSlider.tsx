@@ -430,14 +430,14 @@ export function InvoiceSlider() {
             <div className="flex flex-col px-6 py-2">
               {invoice.line_items.map(
                 (lineItem, index) =>
-                  (lineItem.expense_id || lineItem.task_id) && (
+                  (lineItem.expense_id || lineItem.resource_id) && (
                     <React.Fragment key={index}>
                       {lineItem.expense_id && (
                         <ViewLineItemExpense expenseId={lineItem.expense_id} />
                       )}
 
-                      {lineItem.task_id && (
-                        <ViewLineItemTask taskId={lineItem.task_id} />
+                                              {lineItem.resource_id && (
+                          <ViewLineItemTask taskId={lineItem.resource_id} />
                       )}
                     </React.Fragment>
                   )

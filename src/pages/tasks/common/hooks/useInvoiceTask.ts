@@ -210,13 +210,13 @@ export function useInvoiceTask(params?: Params) {
 
         const item: InvoiceItem = {
           ...blankLineItem(),
-          type_id: InvoiceItemType.Task,
+                                    type_id: InvoiceItemType.Resource,
           cost: task.rate,
           quantity: taskQuantity,
           line_total: Number(
             (task.rate * taskQuantity).toFixed(userNumberPrecision)
           ),
-          task_id: task.id,
+                      resource_id: task.id,
           tax_id: '',
           custom_value1: task.custom_value1,
           custom_value2: task.custom_value2,

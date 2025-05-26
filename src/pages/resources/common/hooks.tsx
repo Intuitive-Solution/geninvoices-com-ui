@@ -103,7 +103,6 @@ export function useActions() {
 export const defaultColumns: string[] = [
   'name',
   'description',
-  'quantity',
   'rate',
 ];
 
@@ -111,7 +110,6 @@ export function useAllResourceColumns() {
   const resourceColumns = [
     'name',
     'description',
-    'quantity',
     'rate',
   ] as const;
 

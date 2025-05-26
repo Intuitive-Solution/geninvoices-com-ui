@@ -85,7 +85,7 @@ export function AddUninvoicedItemsButton(props: Props) {
       !selectedProducts.length &&
       !selectedTasks.filter(
         (task) =>
-          !invoice?.line_items.find((lineItem) => lineItem.task_id === task.id)
+          !invoice?.line_items.find((lineItem) => lineItem.resource_id === task.id)
       ).length &&
       !selectedExpenses.filter(
         (expense) =>
@@ -107,7 +107,7 @@ export function AddUninvoicedItemsButton(props: Props) {
             ...current,
             line_items: current.line_items.filter(
               (item) =>
-                !selectedTasks.find((task) => task.id === item.task_id) &&
+                !selectedTasks.find((task) => task.id === item.resource_id) &&
                 !selectedExpenses.find(
                   (expense) => expense.id === item.expense_id
                 )
@@ -229,10 +229,10 @@ export function AddUninvoicedItemsButton(props: Props) {
                     ...invoice.line_items
                       .filter(
                         (lineItem) =>
-                          lineItem.type_id === InvoiceItemType.Task &&
-                          lineItem.task_id
+                          lineItem.type_id === InvoiceItemType.Resource &&
+                          lineItem.resource_id
                       )
-                      .map((lineItem) => lineItem.task_id as string),
+                      .map((lineItem) => lineItem.resource_id as string),
                     ...selectedTasks.map((task) => task.id),
                   ]}
                 />
@@ -255,7 +255,7 @@ export function AddUninvoicedItemsButton(props: Props) {
                       </div>
 
                       {!invoice?.line_items.find(
-                        (lineItem) => lineItem.task_id === task.id
+                        (lineItem) => lineItem.resource_id === task.id
                       ) && (
                         <div
                           className="cursor-pointer"
@@ -373,7 +373,7 @@ export function AddUninvoicedItemsButton(props: Props) {
               const currentTasks = selectedTasks.filter(
                 (task) =>
                   !invoice?.line_items.find(
-                    (lineItem) => lineItem.task_id === task.id
+                    (lineItem) => lineItem.resource_id === task.id
                   )
               );
 

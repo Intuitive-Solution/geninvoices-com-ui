@@ -43,7 +43,7 @@ const invoice: Invoice = {
   custom_value2: 'no',
   custom_value3: '',
   custom_value4: '',
-  has_tasks: false,
+  has_resources: false,
   has_expenses: false,
   custom_surcharge1: 0,
   custom_surcharge2: 0,
