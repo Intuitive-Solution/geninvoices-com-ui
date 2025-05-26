@@ -18,7 +18,7 @@ import {
 
 interface Props {
   resource: ProductTableResource;
-  type: 'product' | 'task';
+  type: 'product'  | 'resource';
   onChange: (index: number, lineItem: InvoiceItem) => unknown;
 }
 

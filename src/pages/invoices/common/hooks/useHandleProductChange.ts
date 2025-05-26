@@ -21,7 +21,7 @@ import {
 interface Props {
   relationType: RelationType;
   resource: ProductTableResource;
-  type: 'product' | 'task';
+  type: 'product' | 'resource';
   onChange: (index: number, lineItem: InvoiceItem) => unknown;
 }
 
@@ -98,7 +98,7 @@ export function useHandleProductChange(props: Props) {
       lineItem.notes = product?.notes;
     }
 
-    if (props.type == 'task' && product?.notes && !lineItem.notes) {
+    if (props.type == 'resource' && product?.notes && !lineItem.notes) {
       lineItem.notes = product.notes;
     }
 

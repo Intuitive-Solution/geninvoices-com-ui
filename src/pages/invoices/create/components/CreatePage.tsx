@@ -19,13 +19,13 @@ import { ClientSelector } from '../../common/components/ClientSelector';
 import { InvoiceDetails } from '../../common/components/InvoiceDetails';
 import { ProductsTable } from '../../common/components/ProductsTable';
 import { useProductColumns } from '../../common/hooks/useProductColumns';
-import { useTaskColumns } from '../../common/hooks/useTaskColumns';
 import { useInvoiceUtilities } from '../hooks/useInvoiceUtilities';
 import { InvoiceFooter } from '../../common/components/InvoiceFooter';
 import { InvoiceTotals } from '../../common/components/InvoiceTotals';
 import { InvoicePreview } from '../../common/components/InvoicePreview';
 import { CreateInvoiceContext } from '../Create';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
+import { defaultColumns as resourceDefaultColumns } from '$app/pages/resources/common/hooks';
 
 export type ChangeHandler = <T extends keyof Invoice>(
   property: T,
@@ -49,9 +49,9 @@ export default function CreatePage() {
     setIsDefaultTerms,
   } = context;
 
-  const taskColumns = useTaskColumns();
   const reactSettings = useReactSettings();
   const productColumns = useProductColumns();
+  const resourceColumns = resourceDefaultColumns;
 
   const {
     handleChange,
@@ -97,8 +97,8 @@ export default function CreatePage() {
 
         <div className="col-span-12">
           <TabGroup
-            tabs={[t('products'), t('tasks')]}
-            defaultTabIndex={searchParams.get('table') === 'tasks' ? 1 : 0}
+            tabs={[t('products'), t('resources')]}
+            defaultTabIndex={searchParams.get('table') === 'resources' ? 1 : 0}
           >
             <div>
               {invoice ? (
@@ -106,7 +106,7 @@ export default function CreatePage() {
                   type="product"
                   resource={invoice}
                   shouldCreateInitialLineItem={
-                    searchParams.get('table') !== 'tasks'
+                    searchParams.get('table') !== 'resources'
                   }
                   items={invoice.line_items.filter((item) =>
                     [
@@ -134,21 +134,21 @@ export default function CreatePage() {
             <div>
               {invoice ? (
                 <ProductsTable
-                  type="task"
+                  type="resource"
                   resource={invoice}
                   shouldCreateInitialLineItem={
-                    searchParams.get('table') === 'tasks'
+                    searchParams.get('table') === 'resources'
                   }
                   items={invoice.line_items.filter(
-                    (item) => item.type_id === InvoiceItemType.Task
+                    (item) => item.type_id === InvoiceItemType.Resource
                   )}
-                  columns={taskColumns}
+                  columns={resourceColumns}
                   relationType="client_id"
                   onLineItemChange={handleLineItemChange}
                   onSort={(lineItems) => handleChange('line_items', lineItems)}
                   onLineItemPropertyChange={handleLineItemPropertyChange}
                   onCreateItemClick={() =>
-                    handleCreateLineItem(InvoiceItemType.Task)
+                    handleCreateLineItem(InvoiceItemType.Resource)
                   }
                   onDeleteRowClick={handleDeleteLineItem}
                 />

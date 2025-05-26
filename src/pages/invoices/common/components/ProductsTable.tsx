@@ -34,7 +34,7 @@ export type RelationType = 'client_id' | 'vendor_id';
 export const isDeleteActionTriggeredAtom = atom<boolean | undefined>(undefined);
 
 interface Props {
-  type: 'product' | 'task';
+  type: 'product' | 'resource';
   resource: ProductTableResource;
   items: InvoiceItem[];
   columns: string[];
@@ -132,10 +132,11 @@ export function ProductsTable(props: Props) {
                           width={resolveColumnWidth(column)}
                           key={columnIndex}
                         >
+                         
                           {length - 1 !== columnIndex && (
                             <div
                               className={classNames({
-                                'flex justify-between items-center space-x-3':
+                                'flex  items-center space-x-3':
                                   columnIndex === 0,
                               })}
                             >

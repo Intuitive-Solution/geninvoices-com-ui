@@ -14,7 +14,6 @@ import { useFormatMoney } from '$app/common/hooks/money/useFormatMoney';
 import { Resource } from '$app/common/interfaces/resource';
 import { ValidationBag } from '$app/common/interfaces/validation-bag';
 import { DropdownElement } from '$app/components/dropdown/DropdownElement';
-import { EntityStatus } from '$app/components/EntityStatus';
 import { Icon } from '$app/components/icons/Icon';
 import { Action } from '$app/components/ResourceActions';
 import { DataTableColumnsExtended } from '$app/pages/invoices/common/hooks/useInvoiceColumns';
@@ -105,7 +104,6 @@ export const defaultColumns: string[] = [
   'name',
   'description',
   'rate',
-  'entity_state',
 ];
 
 export function useAllResourceColumns() {
@@ -113,8 +111,6 @@ export function useAllResourceColumns() {
     'name',
     'description',
     'rate',
-    'assigned_user_id',
-    'entity_state',
   ] as const;
 
   return resourceColumns;
@@ -161,12 +157,6 @@ export function useResourceColumns() {
           resource.company?.settings?.country_id,
           resource.company?.settings?.currency_id
         ),
-    },
-    {
-      column: 'entity_state',
-      id: 'id',
-      label: t('entity_state'),
-      format: (value, resource) => <EntityStatus entity={resource} />,
     },
   ];
 

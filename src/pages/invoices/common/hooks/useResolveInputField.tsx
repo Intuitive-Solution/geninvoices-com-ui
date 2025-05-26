@@ -49,6 +49,8 @@ import {
   getTaxRateComboValue,
   TaxNamePropertyType,
 } from '$app/common/helpers/tax-rates/tax-rates-combo';
+import { ResourceSelector } from '$app/components/resources/ResourceSelector';
+import { Resource } from '$app/common/interfaces/resource';
 
 const numberInputs = [
   'discount',
@@ -69,7 +71,7 @@ const defaultCurrencySeparators: DecimalInputSeparators = {
 
 interface Props {
   resource: ProductTableResource;
-  type: 'product' | 'task';
+  type: 'product' | 'resource';
   relationType: RelationType;
   onLineItemChange: (index: number, lineItem: InvoiceItem) => unknown;
   onLineItemPropertyChange: (
@@ -117,8 +119,8 @@ export function useResolveInputField(props: Props) {
     (lineItems: InvoiceItem[]) => {
       let typeId = InvoiceItemType.Product;
 
-      if (props.type === 'task') {
-        typeId = InvoiceItemType.Task;
+      if (props.type === 'resource') {
+        typeId = InvoiceItemType.Resource;
       }
 
       const typeFilteredLineItems = lineItems.filter(
@@ -317,10 +319,44 @@ export function useResolveInputField(props: Props) {
     );
   };
 
+  const onResourceChange = async (
+    index: number,
+    value: string,
+    resource: Resource | null
+  ) => {
+    setIsDeleteActionTriggered(false);
+
+    if (resource) {
+      const lineItem = { ...props.resource.line_items[index] };
+      lineItem.product_key = resource.name;
+      lineItem.notes = resource.description || '';
+      lineItem.cost = resource.rate || 0;
+      lineItem.quantity = 1;
+      await props.onLineItemChange(index, lineItem);
+    } else {
+      await onChange('product_key', value, index);
+    }
+  };
+
   return (key: string, index: number) => {
     const property = resolveProperty(key);
-
     if (property === 'product_key') {
+      if (props.type === 'resource') {
+        return (
+          <ResourceSelector
+            key={`${property}${resource?.line_items[index][property]}`}
+            onChange={(value) =>
+              onResourceChange(index, value.label, value.resource)
+            }
+            className="w-auto"
+            defaultValue={resource?.line_items[index][property]}
+            clearButton
+            onInputValueChange={(value: string) => onChange('product_key', value, index)}
+            onClearButtonClick={() => onResourceChange(index, '', null)}
+          />
+        );
+      }
+
       return (
         <ProductSelector
           key={`${property}${resource?.line_items[index][property]}`}
@@ -333,7 +369,7 @@ export function useResolveInputField(props: Props) {
             product && onProductChange(index, product.product_key, product)
           }
           clearButton
-          onInputValueChange={(value) => onChange('product_key', value, index)}
+          onInputValueChange={(value: string) => onChange('product_key', value, index)}
           onClearButtonClick={() => handleProductChange(index, '', null)}
           displayStockQuantity={location.pathname.startsWith('/invoices')}
         />
@@ -429,9 +465,9 @@ export function useResolveInputField(props: Props) {
       );
     }
 
-    if (['task1', 'task2', 'task3', 'task4'].includes(property)) {
+    if (['resource1', 'resource2', 'resource3', 'resource4'].includes(property)) {
       const field = property.replace(
-        'task',
+        'resource',
         'custom_value'
       ) as keyof InvoiceItem;
 

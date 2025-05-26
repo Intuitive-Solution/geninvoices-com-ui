@@ -56,7 +56,7 @@ export interface Invoice {
   custom_value2: string;
   custom_value3: string;
   custom_value4: string;
-  has_tasks: boolean;
+  has_resources: boolean;
   has_expenses: boolean;
   custom_surcharge1: number;
   custom_surcharge2: number;
@@ -111,7 +111,7 @@ export interface Activity {
   expense_id: string;
   is_system: boolean;
   contact_id: string;
-  task_id: string;
+  resource_id: string;
   token_id: string;
   notes: string;
   ip: string;

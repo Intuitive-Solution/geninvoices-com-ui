@@ -13,7 +13,7 @@ import { resolveKey } from '$app/pages/invoices/common/helpers/resolve-key';
 import { useTranslation } from 'react-i18next';
 
 interface Params {
-  type?: 'product' | 'task';
+  type?: 'product' | 'resource';
 }
 
 export function useResolveTranslation(params?: Params) {
@@ -25,7 +25,7 @@ export function useResolveTranslation(params?: Params) {
   const customFields =
     type === 'product' || !type
       ? ['product1', 'product2', 'product3', 'product4']
-      : ['task1', 'task2', 'task3', 'task4'];
+      : ['resource1', 'resource2', 'resource3', 'resource4'];
 
   const aliases: Record<string, string> = {
     '$product.tax_rate1': t('tax_rate1'),

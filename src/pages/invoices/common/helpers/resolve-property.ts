@@ -14,9 +14,12 @@ import { resolveKey } from './resolve-key';
 
 export function resolveProperty(property: string) {
   const { property: _property } = resolveKey(property);
+  
+  // If resolveKey returns undefined (no delimiter found), use the original property
+  const actualProperty = _property || property;
 
   return (
-    (aliases[_property] as keyof InvoiceItem) ||
-    (_property as keyof InvoiceItem)
+    (aliases[actualProperty] as keyof InvoiceItem) ||
+    (actualProperty as keyof InvoiceItem)
   );
 }
