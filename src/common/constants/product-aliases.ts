@@ -15,5 +15,5 @@ export const aliases: Record<string, string> = {
   description: 'notes',
   unit_cost: 'cost',
   rate: 'cost',
-  hours: 'quantity',
+  days: 'quantity',
 };

@@ -43,7 +43,6 @@ import { route } from '$app/common/helpers/route';
 import { Project } from '$app/common/interfaces/project';
 import { Icon } from '$app/components/icons/Icon';
 import { ExternalLink } from 'react-feather';
-import { defaultColumns as resourceDefaultColumns } from '$app/pages/resources/common/hooks';
 
 export interface Context {
   invoice: Invoice | undefined;
@@ -91,7 +90,7 @@ export default function Edit() {
   const { changeTemplateVisible, setChangeTemplateVisible } =
     useChangeTemplate();
 
-  const resourceColumns = resourceDefaultColumns;
+  const resourceColumns = ['name', 'description', 'rate', 'quantity', 'line_total'];
 
   return (
     <>

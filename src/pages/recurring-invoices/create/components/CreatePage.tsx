@@ -23,7 +23,7 @@ import { useOutletContext, useSearchParams } from 'react-router-dom';
 import { RecurringInvoiceContext } from '../Create';
 import { useRecurringInvoiceUtilities } from '../../common/hooks';
 import { useProductColumns } from '$app/pages/invoices/common/hooks/useProductColumns';
-import { defaultColumns as resourceDefaultColumns } from '$app/pages/resources/common/hooks';
+
 
 export default function CreatePage() {
   const [t] = useTranslation();
@@ -34,7 +34,7 @@ export default function CreatePage() {
 
   const { recurringInvoice, errors, invoiceSum, client } = context;
 
-  const resourceColumns = resourceDefaultColumns;
+  const resourceColumns = ['name', 'description', 'rate', 'quantity', 'line_total'];
   const productColumns = useProductColumns();
 
   const {

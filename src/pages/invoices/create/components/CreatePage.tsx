@@ -25,7 +25,6 @@ import { InvoiceTotals } from '../../common/components/InvoiceTotals';
 import { InvoicePreview } from '../../common/components/InvoicePreview';
 import { CreateInvoiceContext } from '../Create';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
-import { defaultColumns as resourceDefaultColumns } from '$app/pages/resources/common/hooks';
 
 export type ChangeHandler = <T extends keyof Invoice>(
   property: T,
@@ -51,7 +50,7 @@ export default function CreatePage() {
 
   const reactSettings = useReactSettings();
   const productColumns = useProductColumns();
-  const resourceColumns = resourceDefaultColumns;
+  const resourceColumns = ['name', 'description', 'rate', 'quantity', 'line_total'];
 
   const {
     handleChange,

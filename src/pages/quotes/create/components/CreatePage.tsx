@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
 import { Card } from '$app/components/cards';
 import { TabGroup } from '$app/components/TabGroup';
-import { defaultColumns as resourceDefaultColumns } from '$app/pages/resources/common/hooks';
+
 import { QuoteContext } from '../Create';
 import { useQuoteUtilities } from '../../common/hooks';
 import { QuoteDetails } from '../../common/components/QuoteDetails';
@@ -45,7 +45,7 @@ export default function CreatePage() {
 
   const [searchParams] = useSearchParams();
 
-  const resourceColumns = resourceDefaultColumns;
+  const resourceColumns = ['name', 'description', 'rate', 'quantity', 'line_total'];
   const productColumns = useProductColumns();
 
   const {

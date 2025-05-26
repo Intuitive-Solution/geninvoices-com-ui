@@ -29,7 +29,7 @@ import { TabGroup } from '$app/components/TabGroup';
 
 import { useColorScheme } from '$app/common/colors';
 import { RecurringInvoiceContext } from '../create/Create';
-import { defaultColumns as resourceDefaultColumns } from '$app/pages/resources/common/hooks';
+
 
 export default function Edit() {
   const [t] = useTranslation();
@@ -56,7 +56,7 @@ export default function Edit() {
     handleDeleteLineItem,
   } = useRecurringInvoiceUtilities({ client });
 
-  const resourceColumns = resourceDefaultColumns;
+  const resourceColumns = ['name', 'description', 'rate', 'quantity', 'line_total'];
 
   return (
     <>
