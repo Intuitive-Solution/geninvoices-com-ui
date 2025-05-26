@@ -28,7 +28,6 @@ import { InvoicePreview } from '../common/components/InvoicePreview';
 import { InvoiceTotals } from '../common/components/InvoiceTotals';
 import { ProductsTable } from '../common/components/ProductsTable';
 import { useProductColumns } from '../common/hooks/useProductColumns';
-import { useTaskColumns } from '../common/hooks/useTaskColumns';
 import { useInvoiceUtilities } from '../create/hooks/useInvoiceUtilities';
 import { Card } from '$app/components/cards';
 import { InvoiceStatus as InvoiceStatusBadge } from '../common/components/InvoiceStatus';
@@ -44,6 +43,7 @@ import { route } from '$app/common/helpers/route';
 import { Project } from '$app/common/interfaces/project';
 import { Icon } from '$app/components/icons/Icon';
 import { ExternalLink } from 'react-feather';
+import { defaultColumns as resourceDefaultColumns } from '$app/pages/resources/common/hooks';
 
 export interface Context {
   invoice: Invoice | undefined;
@@ -74,7 +74,6 @@ export default function Edit() {
     client,
   } = context;
 
-  const taskColumns = useTaskColumns();
   const reactSettings = useReactSettings();
   const productColumns = useProductColumns();
 
@@ -91,6 +90,8 @@ export default function Edit() {
 
   const { changeTemplateVisible, setChangeTemplateVisible } =
     useChangeTemplate();
+
+  const resourceColumns = resourceDefaultColumns;
 
   return (
     <>
@@ -151,8 +152,8 @@ export default function Edit() {
 
         <div className="col-span-12">
           <TabGroup
-            tabs={[t('products'), t('tasks')]}
-            defaultTabIndex={searchParams.get('table') === 'tasks' ? 1 : 0}
+            tabs={[t('products'), t('resources')]}
+            defaultTabIndex={searchParams.get('table') === 'resources' ? 1 : 0}
           >
             <div>
               {invoice && client ? (
@@ -160,7 +161,7 @@ export default function Edit() {
                   type="product"
                   resource={invoice}
                   shouldCreateInitialLineItem={
-                    searchParams.get('table') !== 'tasks'
+                    searchParams.get('table') !== 'resources'
                   }
                   items={invoice.line_items.filter((item) =>
                     [
@@ -188,21 +189,21 @@ export default function Edit() {
             <div>
               {invoice && client ? (
                 <ProductsTable
-                  type="task"
+                  type="resource"
                   resource={invoice}
                   shouldCreateInitialLineItem={
-                    searchParams.get('table') === 'tasks'
+                    searchParams.get('table') === 'resources'
                   }
                   items={invoice.line_items.filter(
-                    (item) => item.type_id === InvoiceItemType.Task
+                    (item) => item.type_id === InvoiceItemType.Resource
                   )}
-                  columns={taskColumns}
+                  columns={resourceColumns}
                   relationType="client_id"
                   onLineItemChange={handleLineItemChange}
                   onSort={(lineItems) => handleChange('line_items', lineItems)}
                   onLineItemPropertyChange={handleLineItemPropertyChange}
                   onCreateItemClick={() =>
-                    handleCreateLineItem(InvoiceItemType.Task)
+                    handleCreateLineItem(InvoiceItemType.Resource)
                   }
                   onDeleteRowClick={handleDeleteLineItem}
                 />
