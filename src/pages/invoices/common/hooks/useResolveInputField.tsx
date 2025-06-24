@@ -330,7 +330,7 @@ export function useResolveInputField(props: Props) {
       const lineItem = { ...props.resource.line_items[index] };
       lineItem.product_key = resource.name;
       lineItem.notes = resource.description || '';
-      lineItem.cost = resource.rate || 0;
+      lineItem.cost = resource.rate_per_month || 0;
       lineItem.quantity = 1;
       await props.onLineItemChange(index, lineItem);
     } else {
