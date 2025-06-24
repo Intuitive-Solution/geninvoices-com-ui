@@ -66,13 +66,36 @@ export default function Edit() {
             errorMessage={errors?.errors.description}
           />
         </Element>
-
+        <Element leftSide={t('rate') + ' ($) ' + t('per_hour')} required>
+          <InputField
+            type="number"
+            value={resource?.rate_per_hour || 0}
+            onValueChange={(value) => handleChange('rate_per_hour', parseFloat(value) || 0)}
+            errorMessage={errors?.errors.rate_per_hour}
+          />
+        </Element>
+        <Element leftSide={t('rate') + ' ($) ' + t('per_day')} required>
+          <InputField
+            type="number"
+            value={resource?.rate_per_day || 0}
+            onValueChange={(value) => handleChange('rate_per_day', parseFloat(value) || 0)}
+            errorMessage={errors?.errors.rate_per_day}
+          />
+        </Element>
+        <Element leftSide={t('rate') + ' ($) ' + t('per_week')} required>
+          <InputField
+            type="number"
+            value={resource?.rate_per_week || 0}
+            onValueChange={(value) => handleChange('rate_per_week', parseFloat(value) || 0)}
+            errorMessage={errors?.errors.rate_per_week}
+          />
+        </Element>
         <Element leftSide={t('rate') + ' ($) ' + t('per_month')} required>
           <InputField
             type="number"
-            value={resource?.rate || 0}
-            onValueChange={(value) => handleChange('rate', parseFloat(value) || 0)}
-            errorMessage={errors?.errors.rate}
+            value={resource?.rate_per_month || 0}
+            onValueChange={(value) => handleChange('rate_per_month', parseFloat(value) || 0)}
+            errorMessage={errors?.errors.rate_per_month}
           />
         </Element>
 

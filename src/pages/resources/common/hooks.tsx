@@ -103,14 +103,20 @@ export function useActions() {
 export const defaultColumns: string[] = [
   'name',
   'description',
-  'rate',
+  'rate_per_month',
+    'rate_per_hour',
+    'rate_per_day',
+    'rate_per_week',
 ];
 
 export function useAllResourceColumns() {
   const resourceColumns = [
     'name',
     'description',
-    'rate',
+    'rate_per_month',
+    'rate_per_hour',
+    'rate_per_day',
+    'rate_per_week',
   ] as const;
 
   return resourceColumns;
@@ -146,18 +152,7 @@ export function useResourceColumns() {
           {value}
         </span>
       ),
-    },
-    {
-      column: 'rate',
-      id: 'rate',
-      label: t('rate'),
-      format: (value, resource) =>
-        formatMoney(
-          value,
-          resource.company?.settings?.country_id,
-          resource.company?.settings?.currency_id
-        ),
-    },
+    }
   ];
 
   return columns;

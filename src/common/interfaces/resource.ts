@@ -18,7 +18,10 @@ export interface Resource {
   company_id: string;
   name: string;
   description: string;
-  rate: number;
+  rate_per_month: number;
+  rate_per_hour: number;
+  rate_per_day: number;
+  rate_per_week: number;
   custom_value1: string;
   custom_value2: string;
   custom_value3: string;
