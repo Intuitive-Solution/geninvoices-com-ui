@@ -10,7 +10,6 @@
 
 import { getEntityState } from '$app/common/helpers';
 import { route } from '$app/common/helpers/route';
-import { useFormatMoney } from '$app/common/hooks/money/useFormatMoney';
 import { Resource } from '$app/common/interfaces/resource';
 import { ValidationBag } from '$app/common/interfaces/validation-bag';
 import { DropdownElement } from '$app/components/dropdown/DropdownElement';
@@ -124,8 +123,6 @@ export function useAllResourceColumns() {
 
 export function useResourceColumns() {
   const { t } = useTranslation();
-
-  const formatMoney = useFormatMoney();
 
   const resourceColumns = useAllResourceColumns();
   type ResourceColumns = (typeof resourceColumns)[number];
