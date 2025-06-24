@@ -49,7 +49,7 @@ export function ResourceSelector(props: Props) {
               <div className="flex space-x-1">
                 <p className="font-semibold">{resource.name}</p>
                 <p className="text-sm text-gray-500">
-                  (${resource.rate}/month)
+                  (${resource.rate_per_month}/month)
                 </p>
               </div>
               <p className="text-sm truncate">
