@@ -17,8 +17,8 @@ import {
 } from '../hooks/useResolveInputField';
 import { useResolveTranslation } from '../hooks/useResolveTranslation';
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
-import { useHandleSortingRows } from '../hooks/useHandleSortingRows';
 import { resolveColumnWidth } from '../helpers/resolve-column-width';
+import { arrayMoveImmutable } from 'array-move';
 import { Invoice } from '$app/common/interfaces/invoice';
 import { InvoiceItem } from '$app/common/interfaces/invoice-item';
 import { RecurringInvoice } from '$app/common/interfaces/recurring-invoice';
@@ -73,10 +73,31 @@ export function ProductsTable(props: Props) {
     deleteLineItem: props.onDeleteRowClick,
   });
 
-  const onDragEnd = useHandleSortingRows({
-    resource: props.resource,
-    onSort: props.onSort,
-  });
+  const onDragEnd = (result: any) => {
+    if (result.source.index === result.destination?.index) {
+      return;
+    }
+
+    // Use arrayMoveImmutable on the filtered items array, then merge back
+    const sorted = arrayMoveImmutable(
+      items,
+      result.source.index,
+      result.destination?.index as number
+    );
+
+    // Now we need to reconstruct the full line_items array with the sorted items
+    const allLineItems = [...props.resource.line_items];
+    
+    // Replace the items of this type with the sorted ones
+    let sortedIndex = 0;
+    for (let i = 0; i < allLineItems.length; i++) {
+      if (items.includes(allLineItems[i])) {
+        allLineItems[i] = sorted[sortedIndex++];
+      }
+    }
+
+    return props.onSort(allLineItems);
+  };
 
   const isAnyLineItemEmpty = () => {
     return items.some((lineItem) => isLineItemEmpty(lineItem));
@@ -84,6 +105,10 @@ export function ProductsTable(props: Props) {
 
   const getLineItemIndex = (lineItem: InvoiceItem) => {
     return resource.line_items.indexOf(lineItem);
+  };
+
+  const getLocalIndex = (lineItem: InvoiceItem) => {
+    return items.indexOf(lineItem);
   };
 
   // This portion of the code pertains to the automatic creation of line items.
@@ -116,14 +141,14 @@ export function ProductsTable(props: Props) {
             <Tbody {...provided.droppableProps} innerRef={provided.innerRef}>
               {items.map((lineItem, index) => (
                 <Draggable
-                  key={getLineItemIndex(lineItem)}
-                  draggableId={getLineItemIndex(lineItem).toString()}
-                  index={getLineItemIndex(lineItem)}
+                  key={getLocalIndex(lineItem)}
+                  draggableId={getLocalIndex(lineItem).toString()}
+                  index={getLocalIndex(lineItem)}
                 >
                   {(provided) => (
                     <Tr
                       innerRef={provided.innerRef}
-                      key={getLineItemIndex(lineItem)}
+                      key={getLocalIndex(lineItem)}
                       tabIndex={index + 1}
                       {...provided.draggableProps}
                     >

@@ -51,6 +51,10 @@ import {
 } from '$app/common/helpers/tax-rates/tax-rates-combo';
 import { ResourceSelector } from '$app/components/resources/ResourceSelector';
 import { Resource } from '$app/common/interfaces/resource';
+import { UnitSelector } from '$app/components/resources/UnitSelector';
+import { request } from '$app/common/helpers/request';
+import { endpoint } from '$app/common/helpers';
+import { useTranslation } from 'react-i18next';
 
 const numberInputs = [
   'discount',
@@ -98,6 +102,7 @@ export const isLineItemEmpty = (lineItem: InvoiceItem) => {
 
 export function useResolveInputField(props: Props) {
   const location = useLocation();
+  const [t] = useTranslation();
 
   const [inputCurrencySeparators, setInputCurrencySeparators] =
     useState<DecimalInputSeparators>();
@@ -105,6 +110,9 @@ export function useResolveInputField(props: Props) {
   const [isDeleteActionTriggered, setIsDeleteActionTriggered] = useAtom(
     isDeleteActionTriggeredAtom
   );
+  
+  // Track current resources for each line item
+  const [currentResources, setCurrentResources] = useState<Record<number, Resource | null>>({});
 
   const isAnyExceptLastLineItemEmpty = (items: InvoiceItem[]) => {
     const filteredItems = items.filter(
@@ -319,6 +327,21 @@ export function useResolveInputField(props: Props) {
     );
   };
 
+  const getRateByUnit = (resource: Resource, unit: string): number => {
+    switch (unit) {
+      case 'hour':
+        return resource.rate_per_hour || 0;
+      case 'day':
+        return resource.rate_per_day || 0;
+      case 'week':
+        return resource.rate_per_week || 0;
+      case 'month':
+        return resource.rate_per_month || 0;
+      default:
+        return resource.rate_per_hour || 0;
+    }
+  };
+
   const onResourceChange = async (
     index: number,
     value: string,
@@ -326,20 +349,135 @@ export function useResolveInputField(props: Props) {
   ) => {
     setIsDeleteActionTriggered(false);
 
+    // Store the resource data for this line item
+    setCurrentResources(prev => ({
+      ...prev,
+      [index]: resource
+    }));
+
     if (resource) {
       const lineItem = { ...props.resource.line_items[index] };
+      const currentUnit = lineItem.unit || 'hour';
+      const rate = getRateByUnit(resource, currentUnit);
+      
       lineItem.product_key = resource.name;
       lineItem.notes = resource.description || '';
-      lineItem.cost = resource.rate_per_month || 0;
+      lineItem.cost = rate;
       lineItem.quantity = 1;
+      lineItem.resource_id = resource.id;
+      
+      // Store the formatted rate with unit in the unit field
+      const formattedRate = formatMoney(rate);
+      const unitLabel = currentUnit === 'hour' ? t('per_hour') : 
+                       currentUnit === 'day' ? t('per_day') : 
+                       currentUnit === 'week' ? t('per_week') : 
+                       currentUnit === 'month' ? t('per_month') : 
+                       `${t('per')} ${currentUnit}`;
+      
+      lineItem.unit = `${formattedRate} ${unitLabel}`;
+      
       await props.onLineItemChange(index, lineItem);
     } else {
       await onChange('product_key', value, index);
     }
   };
 
+  const onUnitChange = async (index: number, unit: string) => {
+    console.log('onUnitChange', index, unit);
+    setIsDeleteActionTriggered(false);
+    
+    const lineItem = { ...props.resource.line_items[index] };
+
+    console.log('lineItem', lineItem);
+    console.log('props.type', props.type);
+    
+    // If there's a resource selected, try to update the rate based on the new unit
+    if (lineItem.resource_id && props.type === 'resource') {
+      try {
+        console.log('lineItem.resource_id', lineItem.resource_id);
+        // Fetch the resource to get the correct rate for the selected unit
+        const response = await request('GET', endpoint('/api/v1/resources/:id', { id: lineItem.resource_id }));
+        console.log('response', response);
+        const resource = response.data.data;
+        
+        if (resource) {
+          const rate = getRateByUnit(resource, unit);
+          lineItem.cost = rate;
+          
+          // Store the formatted rate with unit in the unit field
+          const formattedRate = formatMoney(rate);
+          const unitLabel = unit === 'hour' ? t('per_hour') : 
+                           unit === 'day' ? t('per_day') : 
+                           unit === 'week' ? t('per_week') : 
+                           unit === 'month' ? t('per_month') : 
+                           `${t('per')} ${unit}`;
+          
+          lineItem.unit = `${formattedRate} ${unitLabel}`;
+        }
+      } catch (error) {
+        // If we can't fetch the resource, just update the unit without changing the rate
+        console.warn('Could not fetch resource data to update rate:', error);
+        lineItem.unit = unit;
+      }
+    } else {
+      lineItem.unit = unit;
+    }
+    
+    await props.onLineItemChange(index, lineItem);
+  };
+
   return (key: string, index: number) => {
     const property = resolveProperty(key);
+    
+    if (property === 'unit') {
+      // For resources, show the unit selector with resource data
+      if (props.type === 'resource') {
+        const lineItem = resource?.line_items[index];
+        const resourceData = currentResources[index];
+        
+        // If no resource is selected, show read-only empty field
+        if (!lineItem?.resource_id) {
+          return (
+            <div className="px-3 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-md">
+              {resource?.line_items[index][property] || ''}
+            </div>
+          );
+        }
+        
+        // Extract the current unit from the stored formatted value
+        const currentFormattedUnit = lineItem.unit || '';
+        let currentUnit = 'hour'; // default
+        
+        if (currentFormattedUnit.includes('per hour')) currentUnit = 'hour';
+        else if (currentFormattedUnit.includes('per day')) currentUnit = 'day';
+        else if (currentFormattedUnit.includes('per week')) currentUnit = 'week';
+        else if (currentFormattedUnit.includes('per month')) currentUnit = 'month';
+        
+        // If we have resource data, use it; otherwise, the UnitSelector will fetch it when needed
+        return (
+          <UnitSelector
+            key={`${property}${index}_${lineItem?.resource_id}`}
+            value={currentUnit}
+            onChange={(value) => onUnitChange(index, value)}
+            className="w-auto"
+            resource={resourceData}
+            resourceId={lineItem.resource_id}
+          />
+        );
+      }
+      
+      // For products, show the regular unit selector
+      return (
+        <UnitSelector
+          key={`${property}${index}`}
+          value={resource?.line_items[index][property] || 'hour'}
+          onChange={(value) => onUnitChange(index, value)}
+          className="w-auto"
+          resource={null}
+        />
+      );
+    }
+    
     if (property === 'product_key') {
       if (props.type === 'resource') {
         return (
@@ -393,6 +531,15 @@ export function useResolveInputField(props: Props) {
     }
 
     if (numberInputs.includes(property)) {
+      // Make cost field (displayed as rate) non-editable for resources
+      if (property === 'cost' && props.type === 'resource') {
+        return (
+          <div className="px-3 py-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-md">
+            {formatMoney((resource?.line_items[index][property] ?? 0) as number)}
+          </div>
+        );
+      }
+
       return (
         inputCurrencySeparators && (
           <NumberInputField

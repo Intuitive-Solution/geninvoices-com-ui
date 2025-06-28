@@ -34,7 +34,7 @@ export default function CreatePage() {
 
   const { recurringInvoice, errors, invoiceSum, client } = context;
 
-  const resourceColumns = ['name', 'description', 'rate', 'quantity', 'line_total'];
+  const resourceColumns = ['name', 'description', 'unit', 'quantity', 'line_total'];
   const productColumns = useProductColumns();
 
   const {

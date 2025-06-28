@@ -45,7 +45,7 @@ export default function CreatePage() {
 
   const [searchParams] = useSearchParams();
 
-  const resourceColumns = ['name', 'description', 'rate', 'quantity', 'line_total'];
+  const resourceColumns = ['name', 'description', 'unit', 'quantity', 'line_total'];
   const productColumns = useProductColumns();
 
   const {

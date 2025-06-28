@@ -46,4 +46,5 @@ export interface InvoiceItem {
   tax_id: string;
   resource_id?: string;
   expense_id?: string;
+  unit?: string;
 }
