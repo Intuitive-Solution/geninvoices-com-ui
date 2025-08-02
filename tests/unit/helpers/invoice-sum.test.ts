@@ -147,6 +147,7 @@ describe('InvoiceSum test invoice calculation', () => {
 
     invoice.line_items = [{
       quantity: 1,
+      billable_time: 1,
       cost: 82.6446,
       product_key: '',
       notes: '',
@@ -196,6 +197,7 @@ describe('InvoiceSum test invoice calculation', () => {
 
     invoice.line_items = [{
       quantity: 25,
+      billable_time: 1,
       cost: 0.333,
       product_key: '',
       notes: '',
@@ -222,6 +224,7 @@ describe('InvoiceSum test invoice calculation', () => {
       tax_id: '1',
     }, {
         quantity: 25,
+        billable_time: 1,
         cost: 0.333,
         product_key: '',
         notes: '',
@@ -248,6 +251,7 @@ describe('InvoiceSum test invoice calculation', () => {
         tax_id: '1',
       }, {
         quantity: 25,
+        billable_time: 1,
         cost: 1.333,
         product_key: '',
         notes: '',
@@ -274,6 +278,7 @@ describe('InvoiceSum test invoice calculation', () => {
         tax_id: '1',
       }, {
         quantity: 25,
+        billable_time: 1,
         cost: 0.267,
         product_key: '',
         notes: '',
@@ -300,6 +305,7 @@ describe('InvoiceSum test invoice calculation', () => {
         tax_id: '1',
       }, {
         quantity: 25,
+        billable_time: 1,
         cost: 0.05,
         product_key: '',
         notes: '',

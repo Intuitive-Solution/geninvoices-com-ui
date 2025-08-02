@@ -56,7 +56,7 @@ export default function Edit() {
     handleDeleteLineItem,
   } = useRecurringInvoiceUtilities({ client });
 
-  const resourceColumns = ['name', 'description', 'unit', 'quantity', 'line_total'];
+  const resourceColumns = ['name', 'description', 'unit', 'quantity', 'billable_time', 'line_total'];
 
   return (
     <>

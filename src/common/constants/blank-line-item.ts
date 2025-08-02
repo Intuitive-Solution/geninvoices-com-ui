@@ -18,6 +18,7 @@ export const blankLineItem = (): InvoiceItem => {
   return {
     _id: v4(),
     quantity: 0,
+    billable_time: 1,
     cost: 0,
     product_key: '',
     product_cost: 0,

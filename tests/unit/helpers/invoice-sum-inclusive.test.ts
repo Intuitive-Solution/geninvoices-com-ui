@@ -166,6 +166,7 @@ describe('InvoiceSum test invoice calculation', () => {
   it('Calculate Line Item Tax Total', async () => {
     const newItem: InvoiceItem = {
       quantity: 1,
+      billable_time: 1,
       cost: 14,
       product_key: '',
       notes: '',
@@ -211,6 +212,7 @@ describe('InvoiceSum test invoice calculation', () => {
   it('Calculate LineTotal With multi length discount', async () => {
     const new_item: InvoiceItem = {
       quantity: 1,
+      billable_time: 1,
       cost: 10,
       product_key: '',
       notes: '',

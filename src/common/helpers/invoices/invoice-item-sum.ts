@@ -13,6 +13,7 @@ import { InvoiceItem } from '$app/common/interfaces/invoice-item';
 import { RecurringInvoice } from '$app/common/interfaces/recurring-invoice';
 import { Currency } from '$app/common/interfaces/currency';
 import { PurchaseOrder } from '$app/common/interfaces/purchase-order';
+import { InvoiceItemType } from '$app/common/interfaces/invoice-item';
 
 export class InvoiceItemSum {
   public taxCollection = collect();
@@ -57,8 +58,15 @@ export class InvoiceItemSum {
   }
 
   protected sumLineItem() {
-    this.item.line_total =
-      this.item.cost * this.item.quantity + 0.000000000000004;
+    // For resources (type_id = 2), include billable_time in the calculation
+    if (this.item.type_id === InvoiceItemType.Resource) {
+      this.item.line_total =
+        this.item.cost * (this.item.quantity * (this.item.billable_time || 1)) + 0.000000000000004;
+    } else {
+      // For products and other types, use the original calculation
+      this.item.line_total =
+        this.item.cost * this.item.quantity + 0.000000000000004;
+    }
 
     return this;
   }

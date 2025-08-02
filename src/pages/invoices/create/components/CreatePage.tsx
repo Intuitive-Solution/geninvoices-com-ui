@@ -50,7 +50,7 @@ export default function CreatePage() {
 
   const reactSettings = useReactSettings();
   const productColumns = useProductColumns();
-  const resourceColumns = ['name', 'description', 'unit', 'quantity', 'line_total'];
+  const resourceColumns = ['name', 'description', 'unit', 'quantity', 'billable_time', 'line_total'];
 
   const {
     handleChange,

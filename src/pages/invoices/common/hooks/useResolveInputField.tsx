@@ -61,6 +61,7 @@ const numberInputs = [
   'cost',
   'unit_cost',
   'quantity',
+  'billable_time',
   'rate',
   'hours',
 ];
@@ -364,6 +365,7 @@ export function useResolveInputField(props: Props) {
       lineItem.notes = resource.description || '';
       lineItem.cost = rate;
       lineItem.quantity = 1;
+      lineItem.billable_time = lineItem.billable_time || 1;
       lineItem.resource_id = resource.id;
       
       // Store the formatted rate with unit in the unit field
@@ -544,7 +546,7 @@ export function useResolveInputField(props: Props) {
         inputCurrencySeparators && (
           <NumberInputField
             precision={
-              property === 'quantity'
+              property === 'quantity' || property === 'billable_time'
                 ? 6
                 : reactSettings?.number_precision &&
                   reactSettings?.number_precision > 0 &&

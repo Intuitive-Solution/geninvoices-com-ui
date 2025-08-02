@@ -57,6 +57,7 @@ const invoice: Invoice = {
   line_items: [
     {
       quantity: 1,
+      billable_time: 1,
       cost: 876,
       product_key: 'Et et.',
       notes: 'First line item',
@@ -82,6 +83,7 @@ const invoice: Invoice = {
     },
     {
       quantity: 1,
+      billable_time: 1,
       cost: 876,
       product_key: 'Et et.',
       notes: 'Second line item',
@@ -107,6 +109,7 @@ const invoice: Invoice = {
     },
     {
       quantity: 1,
+      billable_time: 1,
       cost: 876,
       product_key: 'Et et.',
       notes: 'Third line item',

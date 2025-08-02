@@ -48,7 +48,7 @@ export default function Edit() {
   } = context;
 
   const colors = useColorScheme();
-  const resourceColumns = ['name', 'description', 'unit', 'quantity', 'line_total'];
+  const resourceColumns = ['name', 'description', 'unit', 'quantity', 'billable_time', 'line_total'];
   const productColumns = useProductColumns();
 
   const {

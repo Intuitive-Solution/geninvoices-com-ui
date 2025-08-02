@@ -21,6 +21,7 @@ export enum InvoiceItemType {
 export interface InvoiceItem {
   _id?: string;
   quantity: number;
+  billable_time: number;
   cost: number;
   product_key: string;
   notes: string;

@@ -128,6 +128,8 @@ export function ProductsTable(props: Props) {
         return lineItem.cost ? `$${parseFloat(lineItem.cost.toString()).toFixed(2)}` : 'No cost';
       case 'quantity':
         return lineItem.quantity ? lineItem.quantity.toString() : 'No quantity';
+      case 'billable_time':
+        return lineItem.billable_time ? lineItem.billable_time.toString() : 'No billable time';
       case 'line_total':
         return lineItem.line_total ? `$${parseFloat(lineItem.line_total.toString()).toFixed(2)}` : 'No total';
       case 'discount':

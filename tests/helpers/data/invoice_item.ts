@@ -3,6 +3,7 @@ import { InvoiceItemType } from '../../../src/common/interfaces/invoice-item';
 export default [
   {
     quantity: 1,
+    billable_time: 1,
     cost: 10,
     product_key: '',
     notes: '',
@@ -30,6 +31,7 @@ export default [
   },
   {
     quantity: 1,
+    billable_time: 1,
     cost: 10,
     product_key: '',
     notes: '',

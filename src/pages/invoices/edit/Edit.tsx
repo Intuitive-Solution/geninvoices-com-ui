@@ -90,7 +90,7 @@ export default function Edit() {
   const { changeTemplateVisible, setChangeTemplateVisible } =
     useChangeTemplate();
 
-  const resourceColumns = ['name', 'description', 'unit', 'quantity', 'line_total'];
+  const resourceColumns = ['name', 'description', 'unit', 'quantity', 'billable_time', 'line_total'];
 
   return (
     <>
