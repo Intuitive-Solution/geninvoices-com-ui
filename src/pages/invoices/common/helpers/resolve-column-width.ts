@@ -15,9 +15,9 @@ export function resolveColumnWidth(column: string) {
 
   const mappings: Record<string, string> = {
     product_key: '15%',
-    notes: '30%',
-    unit: '8%',
-    cost: '10%',
+    notes: '20%',
+    unit: '15%',
+    cost: '13%',
     quantity: '10%',
     line_total: '5%',
     discount: '10%',

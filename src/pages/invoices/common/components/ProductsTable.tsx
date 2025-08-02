@@ -18,6 +18,7 @@ import {
 import { useResolveTranslation } from '../hooks/useResolveTranslation';
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
 import { resolveColumnWidth } from '../helpers/resolve-column-width';
+import { resolveProperty } from '../helpers/resolve-property';
 import { arrayMoveImmutable } from 'array-move';
 import { Invoice } from '$app/common/interfaces/invoice';
 import { InvoiceItem } from '$app/common/interfaces/invoice-item';
@@ -27,6 +28,7 @@ import { atom, useSetAtom } from 'jotai';
 import classNames from 'classnames';
 import { useColorScheme } from '$app/common/colors';
 import { useThemeColorScheme } from '$app/pages/settings/user/components/StatusColorTheme';
+import { Tooltip } from '$app/components/Tooltip';
 
 export type ProductTableResource = Invoice | RecurringInvoice | PurchaseOrder;
 export type RelationType = 'client_id' | 'vendor_id';
@@ -111,6 +113,32 @@ export function ProductsTable(props: Props) {
     return items.indexOf(lineItem);
   };
 
+  // Helper function to get display value for tooltips
+  const getTooltipValue = (lineItem: InvoiceItem, column: string) => {
+    const property = resolveProperty(column);
+    
+    switch (property) {
+      case 'product_key':
+        return lineItem.product_key || 'No product selected';
+      case 'notes':
+        return lineItem.notes || 'No description';
+      case 'unit':
+        return lineItem.unit || 'No unit';
+      case 'cost':
+        return lineItem.cost ? `$${parseFloat(lineItem.cost.toString()).toFixed(2)}` : 'No cost';
+      case 'quantity':
+        return lineItem.quantity ? lineItem.quantity.toString() : 'No quantity';
+      case 'line_total':
+        return lineItem.line_total ? `$${parseFloat(lineItem.line_total.toString()).toFixed(2)}` : 'No total';
+      case 'discount':
+        return lineItem.discount ? `${lineItem.discount}%` : 'No discount';
+      case 'tax_rate1':
+        return lineItem.tax_rate1 ? `${lineItem.tax_rate1}%` : 'No tax';
+      default:
+        return lineItem[property as keyof InvoiceItem]?.toString() || 'No value';
+    }
+  };
+
   // This portion of the code pertains to the automatic creation of line items.
   // Currently, we do not support this functionality, and we will comment it out until we begin providing support for it.
 
@@ -159,48 +187,60 @@ export function ProductsTable(props: Props) {
                         >
                          
                           {length - 1 !== columnIndex && (
-                            <div
-                              className={classNames({
-                                'flex  items-center space-x-3':
-                                  columnIndex === 0,
-                              })}
+                            <Tooltip
+                              message={getTooltipValue(lineItem, column)}
+                              placement="top"
+                              size="regular"
                             >
-                              {columnIndex === 0 ? (
-                                <button {...provided.dragHandleProps}>
-                                  <AlignJustify size={18} />
-                                </button>
-                              ) : null}
+                              <div
+                                className={classNames({
+                                  'flex  items-center space-x-3':
+                                    columnIndex === 0,
+                                })}
+                              >
+                                {columnIndex === 0 ? (
+                                  <button {...provided.dragHandleProps}>
+                                    <AlignJustify size={18} />
+                                  </button>
+                                ) : null}
 
-                              {resolveInputField(
-                                column,
-                                getLineItemIndex(lineItem)
-                              )}
-                            </div>
+                                {resolveInputField(
+                                  column,
+                                  getLineItemIndex(lineItem)
+                                )}
+                              </div>
+                            </Tooltip>
                           )}
 
                           {length - 1 === columnIndex && (
-                            <div className="flex justify-between items-center">
-                              {resolveInputField(
-                                column,
-                                getLineItemIndex(lineItem)
-                              )}
+                            <Tooltip
+                              message={getTooltipValue(lineItem, column)}
+                              placement="top"
+                              size="regular"
+                            >
+                              <div className="flex justify-between items-center">
+                                {resolveInputField(
+                                  column,
+                                  getLineItemIndex(lineItem)
+                                )}
 
-                              {resource && (
-                                <button
-                                  style={{ color: colors.$3 }}
-                                  className="ml-2 text-gray-600 hover:text-red-600"
-                                  onClick={() => {
-                                    setIsDeleteActionTriggered(true);
+                                {resource && (
+                                  <button
+                                    style={{ color: colors.$3 }}
+                                    className="ml-2 text-gray-600 hover:text-red-600"
+                                    onClick={() => {
+                                      setIsDeleteActionTriggered(true);
 
-                                    props.onDeleteRowClick(
-                                      getLineItemIndex(lineItem)
-                                    );
-                                  }}
-                                >
-                                  <Trash2 size={18} />
-                                </button>
-                              )}
-                            </div>
+                                      props.onDeleteRowClick(
+                                        getLineItemIndex(lineItem)
+                                      );
+                                    }}
+                                  >
+                                    <Trash2 size={18} />
+                                  </button>
+                                )}
+                              </div>
+                            </Tooltip>
                           )}
                         </Td>
                       ))}
