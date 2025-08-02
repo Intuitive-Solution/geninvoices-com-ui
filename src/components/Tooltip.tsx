@@ -58,11 +58,14 @@ export function Tooltip(props: Props) {
 
     if (hoverElement && parentChildrenElementWidth) {
       if (hoverElement.offsetWidth > parentChildrenElementWidth) {
-        setMessageWidth(parentChildrenElementWidth + 10);
+        setMessageWidth(Math.max(parentChildrenElementWidth + 10, 200));
         setIncludeLeading(true);
       } else {
-        setMessageWidth(hoverElement.offsetWidth + 10);
+        setMessageWidth(Math.max(hoverElement.offsetWidth + 10, 200));
       }
+    } else {
+      // Set a minimum width if we can't calculate it
+      setMessageWidth(200);
     }
   }, [parentChildrenElement, props.message]);
 
@@ -88,7 +91,7 @@ export function Tooltip(props: Props) {
                 {
                   'leading-1': includeLeading,
                   'leading-none': !includeLeading,
-                  'whitespace-normal break-all':
+                  'whitespace-normal break-words':
                     Boolean(message) && !withoutWrapping,
                   'whitespace-nowrap': withoutWrapping,
                 }
@@ -97,6 +100,8 @@ export function Tooltip(props: Props) {
                 width: width || messageWidth,
                 backgroundColor: colors.$5,
                 color: colors.$3,
+                minWidth: '200px',
+                maxWidth: '400px',
               }}
             >
               {message}
