@@ -36,9 +36,9 @@ import { BiBuildings, BiWallet, BiFile } from 'react-icons/bi';
 import { AiOutlineBank } from 'react-icons/ai';
 import { ModuleBitmask } from '$app/pages/settings/account-management/component';
 import { QuickCreatePopover } from '$app/components/QuickCreatePopover';
-import { isDemo, isHosted, isSelfHosted, trans } from '$app/common/helpers';
-import { useUnlockButtonForHosted } from '$app/common/hooks/useUnlockButtonForHosted';
-import { useUnlockButtonForSelfHosted } from '$app/common/hooks/useUnlockButtonForSelfHosted';
+import {  isHosted, trans } from '$app/common/helpers';
+// import { useUnlockButtonForHosted } from '$app/common/hooks/useUnlockButtonForHosted';
+// import { useUnlockButtonForSelfHosted } from '$app/common/hooks/useUnlockButtonForSelfHosted';
 import { useCurrentCompanyUser } from '$app/common/hooks/useCurrentCompanyUser';
 import { useEnabled } from '$app/common/guards/guards/enabled';
 import { Dropdown } from '$app/components/dropdown/Dropdown';
@@ -55,7 +55,7 @@ import { useColorScheme } from '$app/common/colors';
 import { Search } from '$app/pages/dashboard/components/Search';
 import { useInjectUserChanges } from '$app/common/hooks/useInjectUserChanges';
 import { useAtomValue } from 'jotai';
-import { usePreventNavigation } from '$app/common/hooks/usePreventNavigation';
+// import { usePreventNavigation } from '$app/common/hooks/usePreventNavigation';
 import { Notifications } from '../Notifications';
 import { useSocketEvent } from '$app/common/queries/sockets';
 import { Invoice } from '$app/common/interfaces/invoice';
@@ -89,7 +89,7 @@ export function Default(props: Props) {
   const hasPermission = useHasPermission();
 
   const colors = useColorScheme();
-  const preventNavigation = usePreventNavigation();
+  // const preventNavigation = usePreventNavigation();
 
   const enabled = useEnabled();
   const user = useInjectUserChanges();
@@ -99,8 +99,8 @@ export function Default(props: Props) {
   const isMiniSidebar = Boolean(
     user?.company_user?.react_settings.show_mini_sidebar
   );
-  const shouldShowUnlockButton =
-    !isDemo() && (useUnlockButtonForHosted() || useUnlockButtonForSelfHosted());
+  // const shouldShowUnlockButton =
+  //   !isDemo() && (useUnlockButtonForHosted() || useUnlockButtonForSelfHosted());
 
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
@@ -434,24 +434,7 @@ export function Default(props: Props) {
             <div className="ml-4 flex items-center md:ml-6 space-x-2 lg:space-x-3">
               {isHosted() ? <Notifications /> : null}
 
-              {shouldShowUnlockButton && (
-                <button
-                  className="hidden sm:inline-flex items-center justify-center py-2 px-4 rounded text-sm text-white bg-green-500 hover:bg-green-600"
-                  onClick={() =>
-                    preventNavigation({
-                      url: (isSelfHosted()
-                        ? import.meta.env.VITE_WHITELABEL_INVOICE_URL ||
-                          'https://invoiceninja.invoicing.co/client/subscriptions/O5xe7Rwd7r/purchase'
-                        : user?.company_user?.ninja_portal_url) as string,
-                      externalLink: true,
-                    })
-                  }
-                >
-                  <span>
-                    {isSelfHosted() ? t('white_label_button') : t('unlock_pro')}
-                  </span>
-                </button>
-              )}
+              {/* White Label button removed */}
 
               {props.onCancelClick && (
                 <Button onClick={props.onCancelClick} type="secondary">
