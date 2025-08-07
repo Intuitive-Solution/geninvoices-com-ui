@@ -21,7 +21,7 @@ import { resolveColumnWidth } from '../helpers/resolve-column-width';
 import { resolveProperty } from '../helpers/resolve-property';
 import { arrayMoveImmutable } from 'array-move';
 import { Invoice } from '$app/common/interfaces/invoice';
-import { InvoiceItem } from '$app/common/interfaces/invoice-item';
+import { InvoiceItem, InvoiceItemType } from '$app/common/interfaces/invoice-item';
 import { RecurringInvoice } from '$app/common/interfaces/recurring-invoice';
 import { PurchaseOrder } from '$app/common/interfaces/purchase-order';
 import { atom, useSetAtom } from 'jotai';
@@ -131,6 +131,11 @@ export function ProductsTable(props: Props) {
       case 'billable_time':
         return lineItem.billable_time ? lineItem.billable_time.toString() : 'No billable time';
       case 'line_total':
+        // Calculate line_total for resources using cost × quantity × billable_time
+        if (lineItem.type_id === InvoiceItemType.Resource) {
+          const calculatedLineTotal = lineItem.cost * (lineItem.quantity * (lineItem.billable_time || 1));
+          return calculatedLineTotal ? `$${parseFloat(calculatedLineTotal.toString()).toFixed(2)}` : 'No total';
+        }
         return lineItem.line_total ? `$${parseFloat(lineItem.line_total.toString()).toFixed(2)}` : 'No total';
       case 'discount':
         return lineItem.discount ? `${lineItem.discount}%` : 'No discount';
