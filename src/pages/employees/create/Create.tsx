@@ -1,10 +1,13 @@
 import { Card, Element } from '$app/components/cards';
-import { InputField, SelectField } from '$app/components/forms';
+import { InputField } from '$app/components/forms';
 import { route } from '$app/common/helpers/route';
 import { useTitle } from '$app/common/hooks/useTitle';
 import { Employee } from '$app/common/interfaces/employee';
 import { ValidationBag } from '$app/common/interfaces/validation-bag';
-import { useBlankEmployeeQuery, useEmployeeSave } from '$app/common/queries/employees';
+import {
+  useBlankEmployeeQuery,
+  useEmployeeSave,
+} from '$app/common/queries/employees';
 import { Page } from '$app/components/Breadcrumbs';
 import { Default } from '$app/components/layouts/Default';
 import { Spinner } from '$app/components/Spinner';
@@ -34,14 +37,15 @@ export default function Create() {
   const [isFormBusy, setIsFormBusy] = useState<boolean>(false);
 
   const actions = useActions();
-  
+
   const employeeSave = useEmployeeSave({
-    setErrors: (validationErrors: Record<string, any>) => setErrors(validationErrors as ValidationBag),
+    setErrors: (validationErrors: Record<string, any>) =>
+      setErrors(validationErrors as ValidationBag),
   });
 
   useEffect(() => {
     if (data) {
-      setEmployee(data.data.data);
+      setEmployee({ ...data.data.data, status: 'active' });
     }
   }, [data]);
 
@@ -56,8 +60,9 @@ export default function Create() {
 
     setErrors(undefined);
     setIsFormBusy(true);
-    
-    employeeSave.mutationFn(employee)
+
+    employeeSave
+      .mutationFn(employee)
       .then((response) => {
         employeeSave.onSuccess(response);
         navigate(route('/employees/:id/edit', { id: response.data.data.id }));
@@ -76,16 +81,11 @@ export default function Create() {
     }
   }, [saveChanges, employee]);
 
-  const statusOptions = [
-    { value: 'active', label: t('active') },
-    { value: 'inactive', label: t('inactive') },
-  ];
-
 
 
   return (
-    <Default 
-      title={documentTitle} 
+    <Default
+      title={documentTitle}
       breadcrumbs={pages}
       navigationTopRight={
         employee && (
@@ -102,61 +102,45 @@ export default function Create() {
       {employee ? (
         <div className="grid grid-cols-12 gap-4">
           <Card className="col-span-12 xl:col-span-8 h-max" withScrollableBody>
-              <Element leftSide={t('name')}>
-                <InputField
-                  value={employee.name}
-                  onValueChange={(value) => handleChange('name', value)}
-                  errorMessage={errors?.errors.name}
-                />
-              </Element>
+            <Element leftSide={t('name')}>
+              <InputField
+                value={employee.name}
+                onValueChange={(value) => handleChange('name', value)}
+                errorMessage={errors?.errors.name}
+              />
+            </Element>
 
-              <Element leftSide={t('employee_id')}>
-                <InputField
-                  value={employee.emp_id}
-                  onValueChange={(value) => handleChange('emp_id', value)}
-                  errorMessage={errors?.errors.emp_id}
-                />
-              </Element>
+            <Element leftSide={t('employee_id')}>
+              <InputField
+                value={employee.emp_id}
+                onValueChange={(value) => handleChange('emp_id', value)}
+                errorMessage={errors?.errors.emp_id}
+              />
+            </Element>
 
-              <Element leftSide={t('department')}>
-                <InputField
-                  value={employee.department}
-                  onValueChange={(value) => handleChange('department', value)}
-                  errorMessage={errors?.errors.department}
-                />
-              </Element>
+            <Element leftSide={t('department')}>
+              <InputField
+                value={employee.department}
+                onValueChange={(value) => handleChange('department', value)}
+                errorMessage={errors?.errors.department}
+              />
+            </Element>
 
-              <Element leftSide={t('designation')}>
-                <InputField
-                  value={employee.designation}
-                  onValueChange={(value) => handleChange('designation', value)}
-                  errorMessage={errors?.errors.designation}
-                />
-              </Element>
+            <Element leftSide={t('designation')}>
+              <InputField
+                value={employee.designation}
+                onValueChange={(value) => handleChange('designation', value)}
+                errorMessage={errors?.errors.designation}
+              />
+            </Element>
 
-              <Element leftSide={t('email')}>
-                <InputField
-                  value={employee.email}
-                  onValueChange={(value) => handleChange('email', value)}
-                  errorMessage={errors?.errors.email}
-                />
-              </Element>
-
-              <Element leftSide={t('status')}>
-                <SelectField
-                  value={employee.status}
-                  onValueChange={(value) => handleChange('status', value)}
-                  errorMessage={errors?.errors.status}
-                >
-                  {statusOptions.map((option: { value: string; label: string }) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </SelectField>
-              </Element>
-
-
+            <Element leftSide={t('email')}>
+              <InputField
+                value={employee.email}
+                onValueChange={(value) => handleChange('email', value)}
+                errorMessage={errors?.errors.email}
+              />
+            </Element>
 
 
           </Card>

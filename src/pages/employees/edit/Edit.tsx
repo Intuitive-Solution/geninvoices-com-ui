@@ -1,5 +1,5 @@
 import { Card, Element } from '$app/components/cards';
-import { InputField, SelectField } from '$app/components/forms';
+import { InputField } from '$app/components/forms';
 import { useTitle } from '$app/common/hooks/useTitle';
 import { Employee } from '$app/common/interfaces/employee';
 import { ValidationBag } from '$app/common/interfaces/validation-bag';
@@ -7,6 +7,7 @@ import { useEmployeeQuery, useEmployeeSave } from '$app/common/queries/employees
 import { Page } from '$app/components/Breadcrumbs';
 import { Default } from '$app/components/layouts/Default';
 import { Spinner } from '$app/components/Spinner';
+import { EntityStatus } from '$app/components/EntityStatus';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -74,10 +75,7 @@ export default function Edit() {
     }
   }, [saveChanges, employee]);
 
-  const statusOptions = [
-    { value: 'active', label: t('active') },
-    { value: 'inactive', label: t('inactive') },
-  ];
+
 
 
 
@@ -141,17 +139,7 @@ export default function Edit() {
             </Element>
 
             <Element leftSide={t('status')}>
-              <SelectField
-                value={employee.status}
-                onValueChange={(value) => handleChange('status', value)}
-                errorMessage={errors?.errors.status}
-              >
-                {statusOptions.map((option: { value: string; label: string }) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </SelectField>
+              <EntityStatus entity={employee} />
             </Element>
 
 
