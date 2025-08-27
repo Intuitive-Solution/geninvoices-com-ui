@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { MdArchive, MdDelete, MdRestore } from 'react-icons/md';
 import { useBulkAction } from '$app/common/queries/employees';
 import { Badge } from '$app/components/Badge';
+import { useMutation } from 'react-query';
 
 export const defaultColumns = [
   'name',
@@ -65,7 +66,8 @@ export function useEmployeeColumns() {
 
 export function useActions() {
   const { t } = useTranslation();
-  const bulk = useBulkAction();
+  const bulkActionConfig = useBulkAction();
+  const bulk = useMutation(bulkActionConfig);
 
   const actions: Action<Employee>[] = [
     (employee) => (

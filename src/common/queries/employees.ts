@@ -3,12 +3,19 @@ import { request } from '$app/common/helpers/request';
 import { toast } from '$app/common/helpers/toast/toast';
 import { Employee } from '$app/common/interfaces/employee';
 import { GenericSingleResourceResponse } from '$app/common/interfaces/generic-api-response';
-import { GenericQueryOptions } from '$app/common/queries/invoices';
 import { $refetch } from '$app/common/hooks/useRefetch';
 import { useQuery, useQueryClient } from 'react-query';
 import { route } from '$app/common/helpers/route';
 
-export function useEmployeesQuery(options?: GenericQueryOptions) {
+interface EmployeeQueryOptions {
+  params?: {
+    per_page?: string;
+    page?: string;
+  };
+  reactQueryOptions?: any;
+}
+
+export function useEmployeesQuery(options?: EmployeeQueryOptions) {
   return useQuery(
     route('/api/v1/employees', options?.params),
     () =>

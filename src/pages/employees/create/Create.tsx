@@ -36,7 +36,7 @@ export default function Create() {
   const actions = useActions();
   
   const employeeSave = useEmployeeSave({
-    setErrors: (validationErrors) => setErrors(validationErrors),
+    setErrors: (validationErrors: Record<string, any>) => setErrors(validationErrors as ValidationBag),
   });
 
   useEffect(() => {

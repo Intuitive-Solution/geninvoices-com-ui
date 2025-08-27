@@ -37,6 +37,7 @@ type PurchaseOrderPermissions =
   | 'create_purchase_order'
   | 'view_purchase_order'
   | 'edit_purchase_order';
+type EmployeePermissions = 'create_employee' | 'view_employee' | 'edit_employee';
 type ReportPermissions = 'view_reports';
 type DashboardPermissions = 'view_dashboard';
 
@@ -56,6 +57,7 @@ export type Permissions =
   | RecurringExpensePermissions
   | BankTransactionsPermissions
   | PurchaseOrderPermissions
+  | EmployeePermissions
   | ReportPermissions
   | DashboardPermissions;
 

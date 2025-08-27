@@ -4,12 +4,10 @@ import { DataTable } from '$app/components/DataTable';
 import { Default } from '$app/components/layouts/Default';
 import { useTranslation } from 'react-i18next';
 import {
-  defaultColumns,
   useActions,
   useEmployeeColumns,
-  useEmployeeFilters,
 } from '../common/hooks';
-import { DataTableColumnsPicker } from '$app/components/DataTableColumnsPicker';
+
 import { ImportButton } from '$app/components/import/ImportButton';
 import { Guard } from '$app/common/guards/Guard';
 import { permission } from '$app/common/guards/guards/permission';
@@ -22,14 +20,13 @@ export default function Employees() {
 
   const columns = useEmployeeColumns();
   const actions = useActions();
-  const filters = useEmployeeFilters();
+
 
   return (
     <Default
       title={documentTitle}
       breadcrumbs={pages}
       docsLink="docs/employees/"
-      withoutBackButton
     >
       <DataTable
         resource="employee"
@@ -40,7 +37,7 @@ export default function Employees() {
         linkToEdit="/employees/:id/edit"
         withResourcefulActions
         customActions={actions}
-        customFilters={filters}
+
         rightSide={
           <Guard
             guards={[permission('create_employee')]}
@@ -49,11 +46,7 @@ export default function Employees() {
         }
       />
 
-      <DataTableColumnsPicker
-        columns={columns as unknown as string[]}
-        defaultColumns={defaultColumns}
-        table="employee"
-      />
+
     </Default>
   );
 }

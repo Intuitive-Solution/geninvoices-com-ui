@@ -226,6 +226,10 @@ export const keys = {
     path: '/api/v1/einvoice/validateEntity',
     dependencies: [],
   },
+  employees: {
+    path: '/api/v1/employees',
+    dependencies: [],
+  },
 };
 
 export function useRefetch() {
