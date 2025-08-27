@@ -15,8 +15,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { ResourceActions } from '$app/components/ResourceActions';
-import { useActions } from '../common/hooks';
+import { Button } from '$app/components/forms';
 
 export default function Create() {
   const { documentTitle } = useTitle('new_employee');
@@ -36,7 +35,7 @@ export default function Create() {
   const [saveChanges, setSaveChanges] = useState<boolean>(false);
   const [isFormBusy, setIsFormBusy] = useState<boolean>(false);
 
-  const actions = useActions();
+
 
   const employeeSave = useEmployeeSave({
     setErrors: (validationErrors: Record<string, any>) =>
@@ -89,13 +88,13 @@ export default function Create() {
       breadcrumbs={pages}
       navigationTopRight={
         employee && (
-          <ResourceActions
-            resource={employee}
-            actions={actions}
-            onSaveClick={() => setSaveChanges(true)}
-            disableSaveButton={isFormBusy}
-            cypressRef="employeeCreateActionDropdown"
-          />
+          <Button
+            onClick={() => setSaveChanges(true)}
+            disabled={isFormBusy}
+            data-cy="employeeCreateSaveButton"
+          >
+            {t('save')}
+          </Button>
         )
       }
     >
