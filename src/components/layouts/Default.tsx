@@ -293,6 +293,22 @@ export function Default(props: Props) {
       },
     },
     {
+      name: t('employees'),
+      href: '/employees',
+      icon: Users,
+      current: location.pathname.startsWith('/employees'),
+      visible:
+        hasPermission('view_employee') ||
+        hasPermission('create_employee') ||
+        hasPermission('edit_employee'),
+      rightButton: {
+        icon: PlusCircle,
+        to: '/employees/create',
+        label: t('new_employee'),
+        visible: hasPermission('create_employee'),
+      },
+    },
+    {
       name: t('recurring_expenses'),
       href: '/recurring_expenses',
       icon: Repeat,

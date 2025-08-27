@@ -33,6 +33,7 @@ import { Index } from '$app/pages/Index';
 import { TestingRoute } from '$app/components/TestingRoute';
 import { TestingPage } from '$app/components/TestingPage';
 import { activityRoutes } from '$app/pages/activities/routes';
+import { employeeRoutes } from '$app/pages/employees/routes';
 import { Guard } from './guards/Guard';
 import { permission } from './guards/guards/permission';
 
@@ -65,6 +66,7 @@ export const routes = (
       {vendorRoutes}
       {purchaseOrderRoutes}
       {expenseRoutes}
+      {employeeRoutes}
       {resourceRoutes}
       {recurringExpenseRoutes}
       {reportRoutes}
