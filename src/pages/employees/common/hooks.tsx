@@ -2,7 +2,6 @@ import { Link } from '$app/components/forms';
 import { getEntityState } from '$app/common/helpers';
 import { route } from '$app/common/helpers/route';
 import { Employee } from '$app/common/interfaces/employee';
-import { Divider } from '$app/components/cards/Divider';
 import { DropdownElement } from '$app/components/dropdown/DropdownElement';
 import { Icon } from '$app/components/icons/Icon';
 import { Action } from '$app/components/ResourceActions';
@@ -27,7 +26,7 @@ export function useEmployeeColumns() {
     {
       id: 'name',
       label: t('name'),
-      format: (value: any, employee: Employee) => (
+      format: (_: any, employee: Employee) => (
         <Link to={route('/employees/:id/edit', { id: employee.id })}>
           {employee.name}
         </Link>
@@ -36,22 +35,22 @@ export function useEmployeeColumns() {
     {
       id: 'emp_id',
       label: t('employee_id'),
-      format: (value: any, employee: Employee) => employee.emp_id,
+      format: (_: any, employee: Employee) => employee.emp_id,
     },
     {
       id: 'department',
       label: t('department'),
-      format: (value: any, employee: Employee) => employee.department,
+      format: (_: any, employee: Employee) => employee.department,
     },
     {
       id: 'designation',
       label: t('designation'),
-      format: (value: any, employee: Employee) => employee.designation,
+      format: (_: any, employee: Employee) => employee.designation,
     },
     {
       id: 'entity_state',
       label: t('entity_state'),
-      format: (value: any, employee: Employee) => <EntityStatus entity={employee} />,
+      format: (_: any, employee: Employee) => <EntityStatus entity={employee} />,
     },
   ];
 
