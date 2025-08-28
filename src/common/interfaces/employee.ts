@@ -5,12 +5,11 @@ export interface Employee {
   department: string;
   designation: string;
   email: string;
-  status: 'active' | 'inactive';
   is_deleted: boolean;
+  archived_at: number | null; // Updated to support EntityState - null when active, timestamp when archived
   user_id: string;
   created_at: number;
   updated_at: number;
-  archived_at: number;
 }
 
 export interface EmployeeFormData {
@@ -19,5 +18,4 @@ export interface EmployeeFormData {
   department: string;
   designation: string;
   email: string;
-  status: 'active' | 'inactive';
 }

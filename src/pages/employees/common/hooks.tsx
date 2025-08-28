@@ -9,7 +9,7 @@ import { Action } from '$app/components/ResourceActions';
 import { useTranslation } from 'react-i18next';
 import { MdArchive, MdDelete, MdRestore } from 'react-icons/md';
 import { useBulkAction } from '$app/common/queries/employees';
-import { Badge } from '$app/components/Badge';
+import { EntityStatus } from '$app/components/EntityStatus';
 import { useMutation } from 'react-query';
 
 export const defaultColumns = [
@@ -17,7 +17,7 @@ export const defaultColumns = [
   'emp_id',
   'department',
   'designation',
-  'status',
+  'entity_state',
 ];
 
 export function useEmployeeColumns() {
@@ -49,15 +49,9 @@ export function useEmployeeColumns() {
       format: (value: any, employee: Employee) => employee.designation,
     },
     {
-      id: 'status',
-      label: t('status'),
-      format: (value: any, employee: Employee) => (
-        <Badge
-          variant={employee.status === 'active' ? 'green' : 'yellow'}
-        >
-          {t(employee.status)}
-        </Badge>
-      ),
+      id: 'entity_state',
+      label: t('entity_state'),
+      format: (value: any, employee: Employee) => <EntityStatus entity={employee} />,
     },
   ];
 
@@ -70,20 +64,6 @@ export function useActions() {
   const bulk = useMutation(bulkActionConfig);
 
   const actions: Action<Employee>[] = [
-    (employee) => (
-      <DropdownElement
-        onClick={() => {
-          bulk.mutate({
-            action: employee.status === 'active' ? 'deactivate' : 'activate',
-            ids: [employee.id],
-          });
-        }}
-        icon={<Icon element={MdArchive} />}
-      >
-        {employee.status === 'active' ? t('deactivate') : t('activate')}
-      </DropdownElement>
-    ),
-    () => <Divider withoutPadding />,
     (employee) => (
       <DropdownElement
         onClick={() => {
@@ -120,12 +100,12 @@ export function useEmployeeFilters() {
 
   const filters = [
     {
-      label: t('status'),
-      column: 'status',
+      label: t('entity_state'),
+      column: 'entity_state',
       type: 'select',
       options: [
         { label: t('active'), value: 'active' },
-        { label: t('inactive'), value: 'inactive' },
+        { label: t('archived'), value: 'archived' },
       ],
     },
     {
