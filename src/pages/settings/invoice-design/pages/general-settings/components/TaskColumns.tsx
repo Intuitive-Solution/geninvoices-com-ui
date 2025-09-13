@@ -20,8 +20,9 @@ export default function TaskColumns() {
   const defaultVariables = [
     { value: '$task.service', label: t('service') },
     { value: '$task.description', label: t('description') },
+    { value: '$task.unit', label: t('unit') },
     { value: '$task.hours', label: t('hours') },
-    { value: '$task.rate', label: t('rate') },
+    { value: '$task.billable_time', label: t('billable_time') },
     { value: '$task.tax', label: t('tax') },
     { value: '$task.discount', label: t('discount') },
     { value: '$task.line_total', label: t('line_total') },
