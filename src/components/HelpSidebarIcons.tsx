@@ -40,9 +40,6 @@ import { AboutModal } from './AboutModal';
 import { Icon } from './icons/Icon';
 import { FaSlack } from 'react-icons/fa';
 import { useQuery } from 'react-query';
-import axios from 'axios';
-import { MdWarning } from 'react-icons/md';
-import { UpdateAppModal } from './UpdateAppModal';
 
 interface Props {
   docsLink?: string;
@@ -63,15 +60,6 @@ export function HelpSidebarIcons(props: Props) {
   const updateCompanyUser = useUpdateCompanyUser();
   const handleUserChange = useHandleCurrentUserChangeProperty();
 
-  const { data: latestVersion } = useQuery({
-    queryKey: ['/pdf.invoicing.co/api/version'],
-    queryFn: () =>
-      axios
-        .get('https://pdf.invoicing.co/api/version')
-        .then((response) => response.data),
-    staleTime: Infinity,
-  });
-
   const { data: currentSystemInfo } = useQuery({
     queryKey: ['/api/v1/health_check'],
     queryFn: () =>
@@ -87,19 +75,9 @@ export function HelpSidebarIcons(props: Props) {
   const [cronsNotEnabledModal, setCronsNotEnabledModal] =
     useState<boolean>(false);
   const [disabledButton, setDisabledButton] = useState<boolean>(false);
-  const [isUpdateModalVisible, setIsUpdateModalVisible] =
-    useState<boolean>(false);
-
   const isMiniSidebar = Boolean(
     user?.company_user?.react_settings.show_mini_sidebar
   );
-
-  const isUpdateAvailable =
-    isSelfHosted() &&
-    latestVersion &&
-    currentSystemInfo?.api_version &&
-    currentSystemInfo.api_version !== latestVersion &&
-    !currentSystemInfo?.is_docker;
 
   const formik = useFormik({
     initialValues: {
@@ -205,18 +183,11 @@ export function HelpSidebarIcons(props: Props) {
         </Button>
       </Modal>
 
-      <UpdateAppModal
-        isVisible={isUpdateModalVisible}
-        setIsVisible={setIsUpdateModalVisible}
-        installedVersion={currentSystemInfo?.api_version}
-        latestVersion={latestVersion}
-      />
 
       <AboutModal
         isAboutVisible={isAboutVisible}
         setIsAboutVisible={setIsAboutVisible}
         currentSystemInfo={currentSystemInfo}
-        latestVersion={latestVersion}
       />
 
       <nav
@@ -224,27 +195,10 @@ export function HelpSidebarIcons(props: Props) {
         className={classNames('flex py-4 text-white border-t', {
           'justify-end': mobileNavbar,
           'justify-around': !mobileNavbar,
-          'px-2': !isUpdateAvailable,
         })}
       >
         {!isMiniSidebar && !mobileNavbar && (
           <>
-            {isUpdateAvailable && (
-              <div
-                className="cursor-pointer"
-                onClick={() => setIsUpdateModalVisible(true)}
-              >
-                <Tippy
-                  duration={0}
-                  content={t('update_available')}
-                  className="text-white rounded text-xs mb-2"
-                >
-                  <div>
-                    <Icon element={MdWarning} color="white" size={23.5} />
-                  </div>
-                </Tippy>
-              </div>
-            )}
 
             {isSelfHosted() && account && !account.is_scheduler_running && (
               <button

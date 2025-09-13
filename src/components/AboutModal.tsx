@@ -11,7 +11,6 @@
 import {
   Activity,
   CheckCircle,
-  DownloadCloud,
   Facebook,
   GitHub,
   Slack,
@@ -32,9 +31,6 @@ import styled from 'styled-components';
 import { useColorScheme } from '$app/common/colors';
 import { updateCompanyUsers } from '$app/common/stores/slices/company-users';
 import { useDispatch } from 'react-redux';
-import { PasswordConfirmation } from './PasswordConfirmation';
-import { useSetAtom } from 'jotai';
-import { lastPasswordEntryTimeAtom } from '$app/common/atoms/password-confirmation';
 
 interface SystemInfo {
   system_health: boolean;
@@ -68,7 +64,6 @@ interface Props {
   isAboutVisible: boolean;
   setIsAboutVisible: Dispatch<SetStateAction<boolean>>;
   currentSystemInfo: SystemInfo | undefined;
-  latestVersion: string | undefined;
 }
 
 const Div = styled.div`
@@ -88,19 +83,11 @@ export function AboutModal(props: Props) {
     isAboutVisible,
     setIsAboutVisible,
     currentSystemInfo,
-    latestVersion,
   } = props;
 
-  const setLastPasswordEntryTime = useSetAtom(lastPasswordEntryTimeAtom);
 
   const [isFormBusy, setIsFormBusy] = useState<boolean>(false);
   const [isHealthCheckModalOpen, setIsHealthCheckModalOpen] =
-    useState<boolean>(false);
-  const [isForceUpdateModalOpen, setIsForceUpdateModalOpen] =
-    useState<boolean>(false);
-  const [isPasswordConfirmModalOpen, setIsPasswordConfirmModalOpen] =
-    useState<boolean>(false);
-  const [isUpgradeLoadingModalOpen, setIsUpgradeLoadingModalOpen] =
     useState<boolean>(false);
 
   const [systemInfo, setSystemInfo] = useState<SystemInfo | undefined>(
@@ -141,30 +128,6 @@ export function AboutModal(props: Props) {
     }
   };
 
-  const handleUpdateApp = (password: string) => {
-    if (!isFormBusy) {
-      setIsFormBusy(true);
-      setIsUpgradeLoadingModalOpen(true);
-
-      request(
-        'POST',
-        endpoint('/api/v1/self-update'),
-        {},
-        { headers: { 'X-Api-Password': password } }
-      )
-        .then(() => window.location.reload())
-        .catch((error) => {
-          if (error.response?.status === 412) {
-            toast.error('password_error_incorrect');
-            setLastPasswordEntryTime(0);
-          }
-        })
-        .finally(() => {
-          setIsFormBusy(false);
-          setIsUpgradeLoadingModalOpen(false);
-        });
-    }
-  };
 
   return (
     <>
@@ -173,10 +136,7 @@ export function AboutModal(props: Props) {
         visible={isAboutVisible}
         onClose={() => !isFormBusy && setIsAboutVisible(false)}
         disableClosing={
-          isHealthCheckModalOpen ||
-          isForceUpdateModalOpen ||
-          isPasswordConfirmModalOpen ||
-          isUpgradeLoadingModalOpen
+          isHealthCheckModalOpen
         }
       >
         <div className="flex flex-col text-center">
@@ -203,22 +163,6 @@ export function AboutModal(props: Props) {
           </Button>
         )}
 
-        {isSelfHosted() &&
-          latestVersion &&
-          currentSystemInfo?.api_version &&
-          currentSystemInfo.api_version !== latestVersion &&
-          !currentSystemInfo?.is_docker && (
-            <Button
-              behavior="button"
-              className="flex items-center"
-              onClick={() => setIsForceUpdateModalOpen(true)}
-              disableWithoutIcon
-              disabled={isFormBusy}
-            >
-              <Icon element={DownloadCloud} color="white" />
-              <span>{t('force_update')}</span>
-            </Button>
-          )}
 
         <div className="flex flex-wrap justify-center items-center space-x-4 pt-6">
           <a
@@ -451,77 +395,6 @@ export function AboutModal(props: Props) {
         </div>
       </Modal>
 
-      <Modal
-        title={t('update_available')}
-        visible={isForceUpdateModalOpen}
-        onClose={() => setIsForceUpdateModalOpen(false)}
-        disableClosing={
-          isFormBusy || isPasswordConfirmModalOpen || isUpgradeLoadingModalOpen
-        }
-      >
-        <div className="flex flex-col space-y-5">
-          <span className="font-medium text-base">
-            {t('a_new_version_is_available')}
-          </span>
-
-          <div className="flex flex-col">
-            <span>
-              &middot; {t('installed_version')}:{' '}
-              {currentSystemInfo?.api_version}
-            </span>
-            <span>
-              &middot; {t('latest_version')}: {latestVersion}
-            </span>
-          </div>
-
-          <div className="flex justify-between">
-            <Button
-              behavior="button"
-              type="secondary"
-              onClick={() =>
-                window
-                  .open(
-                    'https://github.com/invoiceninja/invoiceninja/releases',
-                    '_blank'
-                  )
-                  ?.focus()
-              }
-              disableWithoutIcon
-              disabled={isFormBusy}
-            >
-              {t('release_notes')}
-            </Button>
-
-            <Button
-              behavior="button"
-              onClick={() => {
-                setIsAboutVisible(false);
-                setIsForceUpdateModalOpen(false);
-                setIsPasswordConfirmModalOpen(true);
-              }}
-              disableWithoutIcon
-              disabled={isFormBusy}
-            >
-              {t('update_now')}
-            </Button>
-          </div>
-        </div>
-      </Modal>
-
-      <Modal
-        title={t('self-update')}
-        visible={isUpgradeLoadingModalOpen}
-        onClose={() => {}}
-        disableClosing
-      >
-        <span className="text-center py-3 font-medium">{t('in_progress')}</span>
-      </Modal>
-
-      <PasswordConfirmation
-        show={isPasswordConfirmModalOpen}
-        onClose={setIsPasswordConfirmModalOpen}
-        onSave={handleUpdateApp}
-      />
     </>
   );
 }
