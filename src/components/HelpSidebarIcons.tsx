@@ -32,7 +32,6 @@ import { useUpdateCompanyUser } from '$app/pages/settings/user/common/hooks/useU
 import { useCurrentUser } from '$app/common/hooks/useCurrentUser';
 import classNames from 'classnames';
 import { AboutModal } from './AboutModal';
-import { Icon } from './icons/Icon';
 import { useQuery } from 'react-query';
 
 interface Props {

@@ -11,11 +11,6 @@
 import {
   Activity,
   CheckCircle,
-  Facebook,
-  GitHub,
-  Slack,
-  Twitter,
-  Youtube,
 } from 'react-feather';
 import { Modal } from './Modal';
 import { useCurrentUser } from '$app/common/hooks/useCurrentUser';
