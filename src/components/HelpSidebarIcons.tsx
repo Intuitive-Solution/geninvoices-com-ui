@@ -9,27 +9,22 @@
  */
 
 import Tippy from '@tippyjs/react';
-import { endpoint, isHosted, isSelfHosted } from '$app/common/helpers';
+import { endpoint, isSelfHosted } from '$app/common/helpers';
 import { request } from '$app/common/helpers/request';
 import { useCurrentAccount } from '$app/common/hooks/useCurrentAccount';
 import { updateCompanyUsers } from '$app/common/stores/slices/company-users';
-import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import {
-  HelpCircle,
   Info,
   Mail,
-  MessageSquare,
   AlertCircle,
   ChevronLeft,
   ChevronRight,
 } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { Button, InputField } from './forms';
-import Toggle from './forms/Toggle';
+import { Button } from './forms';
 import { Modal } from './Modal';
-import { toast } from '$app/common/helpers/toast/toast';
 import { useColorScheme } from '$app/common/colors';
 import { useInjectUserChanges } from '$app/common/hooks/useInjectUserChanges';
 import { useHandleCurrentUserChangeProperty } from '$app/common/hooks/useHandleCurrentUserChange';
@@ -38,11 +33,9 @@ import { useCurrentUser } from '$app/common/hooks/useCurrentUser';
 import classNames from 'classnames';
 import { AboutModal } from './AboutModal';
 import { Icon } from './icons/Icon';
-import { FaSlack } from 'react-icons/fa';
 import { useQuery } from 'react-query';
 
 interface Props {
-  docsLink?: string;
   mobileNavbar?: boolean;
 }
 
@@ -70,7 +63,6 @@ export function HelpSidebarIcons(props: Props) {
     enabled: isSelfHosted(),
   });
 
-  const [isContactVisible, setIsContactVisible] = useState<boolean>(false);
   const [isAboutVisible, setIsAboutVisible] = useState<boolean>(false);
   const [cronsNotEnabledModal, setCronsNotEnabledModal] =
     useState<boolean>(false);
@@ -79,23 +71,6 @@ export function HelpSidebarIcons(props: Props) {
     user?.company_user?.react_settings.show_mini_sidebar
   );
 
-  const formik = useFormik({
-    initialValues: {
-      message: '',
-      platform: 'R',
-      send_logs: false,
-    },
-    onSubmit: (values) => {
-      toast.processing();
-
-      request('POST', endpoint('/api/v1/support/messages/send'), values)
-        .then(() => toast.success('your_message_has_been_received'))
-        .finally(() => {
-          formik.setSubmitting(false);
-          setIsContactVisible(false);
-        });
-    },
-  });
 
   const refreshData = () => {
     setDisabledButton(true);
@@ -123,38 +98,6 @@ export function HelpSidebarIcons(props: Props) {
 
   return (
     <>
-      <Modal
-        title={t('contact_us')}
-        visible={isContactVisible}
-        onClose={setIsContactVisible}
-      >
-        <InputField
-          label={t('from')}
-          id="from"
-          value={`${user?.first_name} - ${user?.email}`}
-          disabled
-        />
-
-        <InputField
-          element="textarea"
-          label={t('message')}
-          id="message"
-          onChange={formik.handleChange}
-        />
-
-        <Toggle
-          id="send_errors"
-          label={t('include_recent_errors')}
-          onChange={(value) => formik.setFieldValue('send_logs', value)}
-        />
-
-        <Button
-          onClick={() => formik.submitForm()}
-          disabled={formik.isSubmitting}
-        >
-          {t('send')}
-        </Button>
-      </Modal>
 
       <Modal
         title={t('crons_not_enabled')}
@@ -164,7 +107,7 @@ export function HelpSidebarIcons(props: Props) {
         <Button
           onClick={() => {
             window.open(
-              'https://invoiceninja.github.io/en/self-host-troubleshooting/#cron-not-running-queue-not-running',
+              'https://geninvoices.com',
               '_blank'
             );
           }}
@@ -221,59 +164,16 @@ export function HelpSidebarIcons(props: Props) {
                 content={t('contact_us')}
                 className="text-white rounded text-xs mb-2"
               >
-                {isHosted() ? (
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => setIsContactVisible(true)}
-                  >
-                    <Mail />
-                  </div>
-                ) : (
-                  <div
-                    className="cursor-pointer"
-                    onClick={() =>
-                      window.open('https://slack.invoiceninja.com', '_blank')
-                    }
-                  >
-                    <Icon element={FaSlack} color="white" size={23} />
-                  </div>
-                )}
+                <a
+                  href="mailto:admin@geninvoices.com"
+                  className="cursor-pointer"
+                >
+                  <Mail />
+                </a>
               </Tippy>
             </div>
 
-            <a
-              href="https://forum.invoiceninja.com"
-              target="_blank"
-              className="hover:bg-ninja-gray-darker rounded-full"
-              rel="noreferrer"
-            >
-              <Tippy
-                duration={0}
-                content={t('support_forum')}
-                className="text-white rounded text-xs mb-2"
-              >
-                <MessageSquare />
-              </Tippy>
-            </a>
 
-            <a
-              href={
-                (props.docsLink &&
-                  `https://invoiceninja.github.io/${props.docsLink}`) ||
-                'https://invoiceninja.github.io'
-              }
-              target="_blank"
-              className="hover:bg-ninja-gray-darker rounded-full"
-              rel="noreferrer"
-            >
-              <Tippy
-                duration={0}
-                content={t('user_guide')}
-                className="text-white rounded text-xs mb-2"
-              >
-                <HelpCircle />
-              </Tippy>
-            </a>
 
             <button
               className="hover:bg-ninja-gray-darker rounded-full overflow-visible"

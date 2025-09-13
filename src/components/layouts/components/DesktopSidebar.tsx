@@ -102,7 +102,7 @@ export function DesktopSidebar(props: Props) {
             )}
           </nav>
 
-          <HelpSidebarIcons docsLink={props.docsLink} />
+          <HelpSidebarIcons />
         </div>
       </div>
     </div>

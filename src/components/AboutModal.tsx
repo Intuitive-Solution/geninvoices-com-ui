@@ -163,48 +163,6 @@ export function AboutModal(props: Props) {
           </Button>
         )}
 
-
-        <div className="flex flex-wrap justify-center items-center space-x-4 pt-6">
-          <a
-            href="https://twitter.com/invoiceninja"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Twitter />
-          </a>
-
-          <a
-            href="https://www.facebook.com/invoiceninja"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Facebook />
-          </a>
-
-          <a
-            href="https://github.com/invoiceninja"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <GitHub />
-          </a>
-
-          <a
-            href="https://www.youtube.com/channel/UCXAHcBvhW05PDtWYIq7WDFA/videos"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Youtube />
-          </a>
-
-          <a
-            href="http://slack.invoiceninja.com/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Slack />
-          </a>
-        </div>
       </Modal>
 
       <Modal
