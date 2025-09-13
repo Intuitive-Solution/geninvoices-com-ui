@@ -586,6 +586,14 @@ export function useResolveInputField(props: Props) {
     }
 
     if (['line_total'].includes(property)) {
+      const lineItem = resource?.line_items[index];
+      
+      // Calculate line_total for resources using cost × quantity × billable_time
+      if (lineItem && lineItem.type_id === InvoiceItemType.Resource) {
+        const calculatedLineTotal = lineItem.cost * (lineItem.quantity * (lineItem.billable_time || 1));
+        return formatMoney(calculatedLineTotal);
+      }
+      
       return formatMoney(resource?.line_items[index][property] as number);
     }
 
