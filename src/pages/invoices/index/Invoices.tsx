@@ -14,9 +14,9 @@ import { Default } from '$app/components/layouts/Default';
 import { useTranslation } from 'react-i18next';
 import { useActions } from '../edit/components/Actions';
 import {
-  defaultColumns,
   useAllInvoiceColumns,
   useInvoiceColumns,
+  useInvoiceDefaultColumns,
 } from '../common/hooks/useInvoiceColumns';
 import { DataTableColumnsPicker } from '$app/components/DataTableColumnsPicker';
 import { useInvoiceFilters } from '../common/hooks/useInvoiceFilters';
@@ -71,6 +71,7 @@ export default function Invoices() {
   const columns = useInvoiceColumns();
   const reactSettings = useReactSettings();
   const invoiceColumns = useAllInvoiceColumns();
+  const invoiceDefaultColumns = useInvoiceDefaultColumns();
   const dateRangeColumns = useDateRangeColumns();
   const customBulkActions = useCustomBulkActions();
   const { footerColumns, allFooterColumns } = useFooterColumns();
@@ -140,7 +141,7 @@ export default function Invoices() {
             <DataTableColumnsPicker
               table="invoice"
               columns={invoiceColumns as unknown as string[]}
-              defaultColumns={defaultColumns}
+              defaultColumns={invoiceDefaultColumns}
             />
           </div>
         }

@@ -35,6 +35,62 @@ import classNames from 'classnames';
 import { useGetTimezone } from '$app/common/hooks/useGetTimezone';
 import { useDateTime } from '$app/common/hooks/useDateTime';
 import { useGetSetting } from '$app/common/hooks/useGetSetting';
+import { useCurrentCompany } from '$app/common/hooks/useCurrentCompany';
+import { customField } from '$app/components/CustomField';
+
+const BILLING_PERIOD_LABEL = 'billing period';
+
+function insertColumnAfterBalance(columns: string[], column: string) {
+  if (columns.includes(column)) {
+    return columns;
+  }
+
+  const next = [...columns];
+  const balanceIndex = next.indexOf('balance');
+
+  if (balanceIndex === -1) {
+    next.push(column);
+  } else {
+    next.splice(balanceIndex + 1, 0, column);
+  }
+
+  return next;
+}
+
+export function useBillingPeriodColumn(): string | null {
+  const company = useCurrentCompany();
+  const customFields = company?.custom_fields;
+
+  if (!customFields) {
+    return null;
+  }
+
+  for (let index = 1; index <= 4; index++) {
+    const field = customFields[`invoice${index}`];
+
+    if (!field) {
+      continue;
+    }
+
+    const label = customField(field).label();
+
+    if (label.trim().toLowerCase() === BILLING_PERIOD_LABEL) {
+      return label;
+    }
+  }
+
+  return null;
+}
+
+export function useInvoiceDefaultColumns() {
+  const billingPeriodColumn = useBillingPeriodColumn();
+
+  if (!billingPeriodColumn) {
+    return defaultColumns;
+  }
+
+  return insertColumnAfterBalance(defaultColumns, billingPeriodColumn);
+}
 
 export type DataTableColumnsExtended<TResource = any, TColumn = string> = {
   column: TColumn;
@@ -484,8 +540,14 @@ export function useInvoiceColumns(): DataTableColumns<Invoice> {
     },
   ];
 
-  const list: string[] =
-    reactSettings?.react_table_columns?.invoice || defaultColumns;
+  const billingPeriodColumn = useBillingPeriodColumn();
+  const invoiceDefaultColumns = useInvoiceDefaultColumns();
+  const selectedColumns =
+    reactSettings?.react_table_columns?.invoice || invoiceDefaultColumns;
+
+  const list = billingPeriodColumn
+    ? insertColumnAfterBalance(selectedColumns, billingPeriodColumn)
+    : selectedColumns;
 
   return columns
     .filter((column) => list.includes(column.column))
