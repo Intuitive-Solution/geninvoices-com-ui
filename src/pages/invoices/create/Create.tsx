@@ -55,9 +55,12 @@ export default function Create() {
   const { documentTitle } = useTitle('new_invoice');
 
   const [invoice, setInvoice] = useAtom(invoiceAtom);
+  const [searchParams] = useSearchParams();
+  const isClone = searchParams.get('action') === 'clone';
 
   const { data, isLoading } = useBlankInvoiceQuery({
-    enabled: typeof invoice === 'undefined',
+    enabled: typeof invoice === 'undefined' || (isClone && !invoice?.number),
+    fresh: true,
   });
 
   const clientResolver = useClientResolver();
@@ -65,7 +68,6 @@ export default function Create() {
 
   const [invoiceSum, setInvoiceSum] = useAtom(invoiceSumAtom);
 
-  const [searchParams] = useSearchParams();
   const [errors, setErrors] = useState<ValidationBag>();
   const [client, setClient] = useState<Client | undefined>();
   const [isDefaultTerms, setIsDefaultTerms] = useState<boolean>(false);
@@ -133,6 +135,11 @@ export default function Create() {
           company?.settings?.inclusive_taxes ?? false;
 
         value = _invoice;
+      }
+
+      if (isClone && value && !value.number && data?.number) {
+        value = cloneDeep(value);
+        value.number = data.number;
       }
 
       return value;
@@ -242,7 +249,7 @@ export default function Create() {
         onSaveClick={() => save(invoice as Invoice)}
         disableSaveButton={invoice?.client_id.length === 0}
       >
-        {!isLoading ? (
+        {!isLoading && !(isClone && invoice && !invoice.number) ? (
           <div className="space-y-4">
             <Tabs tabs={tabs} />
 

@@ -25,6 +25,8 @@ export interface GenericQueryOptions {
   id?: string;
   with?: string[];
   enabled: boolean;
+  /** Bypass the shared blank-invoice cache so the next number is current. */
+  fresh?: boolean;
 }
 
 interface InvoiceQueryParams {
@@ -60,16 +62,17 @@ export function useInvoiceQuery(params: InvoiceQueryParams) {
 
 export function useBlankInvoiceQuery(options?: GenericQueryOptions) {
   const hasPermission = useHasPermission();
+  const fresh = options?.fresh ?? false;
 
   return useQuery<Invoice>(
-    ['/api/v1/invoices/create'],
+    fresh ? ['/api/v1/invoices/create', 'fresh'] : ['/api/v1/invoices/create'],
     () =>
       request('GET', endpoint('/api/v1/invoices/create')).then(
         (response: GenericSingleResourceResponse<Invoice>) => response.data.data
       ),
     {
-      ...options,
-      staleTime: Infinity,
+      staleTime: fresh ? 0 : Infinity,
+      cacheTime: fresh ? 0 : 5 * 60 * 1000,
       enabled: hasPermission('create_invoice')
         ? options?.enabled ?? true
         : false,
